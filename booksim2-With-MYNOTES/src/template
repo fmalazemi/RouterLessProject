@@ -1,0 +1,60 @@
+
+
+
+
+RouterLess Paper outline.
+
+1. introduction
+    a. NoC and its importance in contemporary chips.
+    b. Generally speaking about contemporary NoC designs, their pros and cons.
+    c. The role of Routers and their importance.
+    d. The main problem :
+        i. The importance and significance of saving energy and area in NoC.
+        ii. Basic idea about proposed approach and IMR.
+        iii. the main gains of the approach
+        vi. quick look at simulation results.
+    e. paper organization.
+2. Background and motivation
+    ------ background -------
+    a. brief history of NoC.
+    b. rings and their pros and cons.
+    c. routers and their pros and cons.
+    d. Why routers were introduced
+    d. Contemporary NoC designs and results
+    ------ motivation ------
+    a. why saving in area and power are important to the budget.
+    b. the router's power consumption and area occupancy.
+    c. IMR and problems related to the rings constructions and excess use of buffers.
+3. Proposed Approach:
+    a. quick overview about the layered approach
+    b. how the approach directly positively effects NoC's area and power.
+    d. Layers approach algorithm
+    e. walk through example
+    f. proofs, if necessary
+    g. algorithm's performance compared to IMR
+    g. Hardware related section (area and power stuff)
+
+4. Evaluation Methodology
+    a. Simulation configuration
+    b. work loads in use (synthatic and synfull)
+
+4. results and analysis
+    a. simulation results
+    b. synthatic results
+    c. synfull results
+5. discussion
+    a. serialization deficiency
+6. related work
+    a. The algorithm used by IMR is very slow compared to presented algorithm 
+
+7. conclusion
+
+
+
+
+
+
+
+
+
+    b.

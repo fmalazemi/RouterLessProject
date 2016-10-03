@@ -1,0 +1,49 @@
+IMR simuation using Booksim.
+
+I have changed the following files (probably both cpp and hpp) to simulate IMR.
+anynet.cpp
+iq_router.cpp
+flitchannel.cpp
+buffer.cpp
+buffer_state.cpp
+flit.cpp
+
+flit.cpp:
+        We added the following variables
+        1. ringID. To know current ring of a flit. It is set before leaving
+           the first router.
+        2. creationTime. Once a flit arrives to the first router, we set
+           creationTime = GetSimTime().
+        3. injectionTime. The time when a flit left first hop router. It is
+           the same time we determine the ring that the flit will use.
+        4. arrivalTime. Once a flit reaches destination router, then we set
+           arrivalTime = GetSimTime().
+anynet.cpp:
+        We read file and setup the network and we are ready to go.
+        By default, booksim build bidirectional channel if two routers are
+        directly attached.
+iq_router:
+        This is a completely new router, not based on iq_router.
+        Here we apply IMR interface rules. We also determine the ring of a
+        flit here. Moreover, the f->creationTime, f->injectionTime, and
+        f->arrivalTime in the router.
+        The buffers and buffer_states for attached core channels are
+        unlimited.
+buffer.cpp
+        Once a flit is arrived from any input, it is added to the buffer.
+        The buffer size for core inputs is MAX_INT.
+buffer_state.cpp
+        The current router tracks the buffer of the router on the other
+        side of the channel using buffer_state. It counts how many flits
+        it sent and the receiving router sends credits if and only if
+        a flit in the respective buffer leaves this buffer.
+
+
+
+IMR file format.
+N number of rings.
+i [x1, x2, ... , xt]. i is the ring id and xj is a node on ring i.
+K number of nodes followed by k block
+Each block begin by node number and followed by KxK list as
+i [y1, y2, ... ym] i is destination from node say r to i. y1, y2,
+are ring ids that we can use to reach i from r. 

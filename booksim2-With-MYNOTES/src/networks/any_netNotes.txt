@@ -1,0 +1,5 @@
+If you choose an anynet network, then the default routing function is min_anynet (in anynet.cpp file). 
+This routing function uses dijkstra algorithm, to find shortest paths and store then in global_routing_table[][] array. 
+
+
+If you want ot depoly IMR here, then min_anynet. 
