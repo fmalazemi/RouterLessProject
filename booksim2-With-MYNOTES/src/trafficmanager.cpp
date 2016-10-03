@@ -2207,17 +2207,18 @@ void TrafficManager::DisplayOverallStats( ostream & os ) const {
 
 void TrafficManager::DisplayOverallStatsTOFile() const {
     assert(output_to_file);
-    ofstream file;
-    file.open(output_file_name, ios::out | ios::app);
+    const string xx = "KUWAIT";
+    ofstream  file; 
+    file.open(output_file_name.c_str(), ios::out | ios::app);
     for ( int c = 0; c < _classes; ++c ) {
 
         if(_measure_stats[c] == 0) {
             continue;
         }
-        file<<_overall_avg_plat[c] / (double)_total_sims<<"\t";
+        (file)<<_overall_avg_plat[c] / (double)_total_sims<<"\t";
 
-        file<<_overall_min_plat[c] / (double)_total_sims<<"\t";
-
+        (file)<<_overall_min_plat[c] / (double)_total_sims<<"\t";
+/*
         file<<_overall_max_plat[c] / (double)_total_sims<<"\t";
 
         file<<_overall_avg_nlat[c] / (double)_total_sims << "\t";
@@ -2271,12 +2272,12 @@ void TrafficManager::DisplayOverallStatsTOFile() const {
         file<<_overall_avg_accepted[c] / _overall_avg_accepted_packets[c]<<"\t";
 
         file<<_overall_hop_stats[c] / (double)_total_sims<<"\t";
-
+*/
 
     }
-    file<<endl;
+    (file)<<endl;
 
-    file.close();
+    (file).close();
 
 
 }

@@ -33,15 +33,15 @@ topology = routerless;
 
 use_space_while_stall = 1;
 
-router = rlBeta;
-extension_buffers = 2;
+router = rlAlpha;
+//extension_buffers = 2;
 
 routing_function = min;
 network_file = imrConfig8.txt;
-traffic = uniform;
+traffic = transpose;
 
 sample_period = 100000;
-injection_rate = 0.005; 
+injection_rate = 0.15; 
 
 ejectors = 2;
 buffer_policy = private;
@@ -54,4 +54,4 @@ vc_buf_size = 3;
 small_buf_size = 1;
 big_buf_size = 3; //big must equal to vc_buf_size
 output_to_file = 1;
-output_file_name = runs/rlBetaUniformOutput;
+output_file_name = runs/rlAlphaTransposeOutput;
