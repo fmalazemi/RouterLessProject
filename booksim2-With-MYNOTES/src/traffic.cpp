@@ -271,6 +271,9 @@ int BitRevTrafficPattern::dest(int source)
     result = (result << 1) | (source % 2);
     source >>= 1;
   }
+  if(result == source){
+    result = (result+1)%_nodes;
+  }
   return result;
 }
 
@@ -311,6 +314,9 @@ int TornadoTrafficPattern::dest(int source)
     result += offset *
       (((source / offset) % (_xr * _k) + ((_xr * _k + 1) / 2 - 1)) % (_xr * _k));
     offset *= (_xr * _k);
+  }
+  if(result == source){
+    result = (result+1)%_nodes;
   }
   return result;
 }

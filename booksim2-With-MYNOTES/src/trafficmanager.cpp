@@ -2218,7 +2218,7 @@ void TrafficManager::DisplayOverallStatsTOFile() const {
         (file)<<_overall_avg_plat[c] / (double)_total_sims<<"\t";
 
         (file)<<_overall_min_plat[c] / (double)_total_sims<<"\t";
-/*
+
         file<<_overall_max_plat[c] / (double)_total_sims<<"\t";
 
         file<<_overall_avg_nlat[c] / (double)_total_sims << "\t";
@@ -2272,7 +2272,7 @@ void TrafficManager::DisplayOverallStatsTOFile() const {
         file<<_overall_avg_accepted[c] / _overall_avg_accepted_packets[c]<<"\t";
 
         file<<_overall_hop_stats[c] / (double)_total_sims<<"\t";
-*/
+
 
     }
     (file)<<endl;
