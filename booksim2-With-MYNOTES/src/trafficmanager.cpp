@@ -1717,6 +1717,9 @@ bool TrafficManager::Run( )
             WriteStats(*_stats_out);
         }
         _UpdateOverallStats();
+        if(output_to_file){
+               DisplayOverallStatsTOFile();
+	}
     }
 
     DisplayOverallStats();
@@ -2202,12 +2205,10 @@ void TrafficManager::DisplayOverallStats( ostream & os ) const {
 #endif
 
     }
-    DisplayOverallStatsTOFile();
 }
 
 void TrafficManager::DisplayOverallStatsTOFile() const {
     assert(output_to_file);
-    const string xx = "KUWAIT";
     ofstream  file; 
     file.open(output_file_name.c_str(), ios::out | ios::app);
     for ( int c = 0; c < _classes; ++c ) {
