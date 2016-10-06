@@ -267,11 +267,12 @@ int BitRevTrafficPattern::dest(int source)
 {
   assert((source >= 0) && (source < _nodes));
   int result = 0;
+  int s = source ;
   for(int n = _nodes; n > 1; n >>= 1) {
     result = (result << 1) | (source % 2);
     source >>= 1;
   }
-  if(result == source){
+  if(result == s){
     result = (result+1)%_nodes;
   }
   return result;
@@ -287,7 +288,11 @@ int ShuffleTrafficPattern::dest(int source)
 {
   assert((source >= 0) && (source < _nodes));
   int const shifted = source << 1;
-  return ((shifted & (_nodes - 1)) | bool(shifted & _nodes));
+  int d = ((shifted & (_nodes - 1)) | bool(shifted & _nodes));
+  if(d == source){
+     d = (d+1)%_nodes; 
+  }
+  return d; 
 }
 
 DigitPermutationTrafficPattern::DigitPermutationTrafficPattern(int nodes, int k,

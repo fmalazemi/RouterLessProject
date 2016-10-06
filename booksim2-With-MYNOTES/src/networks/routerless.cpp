@@ -151,8 +151,9 @@ void RouterLess::readShortestRingsRL(ifstream & in /*input file*/){
 
       while(str>>ring_id){
         shortestRing[src][dest].push_back(ring_id);
-
       }
+      random_shuffle(shortestRing[src][dest].begin(), shortestRing[src][dest].end());
+      
     }
   }
 }
