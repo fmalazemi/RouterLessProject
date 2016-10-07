@@ -41,7 +41,7 @@ network_file = imrConfig8.txt;
 traffic = bitcomp;
 
 sample_period = 100000;
-injection_rate = 0.075; 
+injection_rate = 0.08; 
 
 ejectors = 2;
 buffer_policy = private;

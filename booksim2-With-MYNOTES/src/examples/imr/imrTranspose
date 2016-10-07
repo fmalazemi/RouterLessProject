@@ -41,7 +41,7 @@ network_file = imrConfig8_original.txt;
 traffic = transpose;
 
 sample_period = 100000;
-injection_rate = 0.16; 
+injection_rate = 0.145; 
 
 ejectors = 1;
 buffer_policy = private;
