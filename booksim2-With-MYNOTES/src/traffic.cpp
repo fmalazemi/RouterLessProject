@@ -225,9 +225,6 @@ int BitCompTrafficPattern::dest(int source)
   assert((source >= 0) && (source < _nodes));
   int const mask = _nodes - 1;
   int d =~source & mask;
-  if( d == source ){
-    d = (d+1)%_nodes;
-  }
   return d;
 }
 
@@ -251,9 +248,7 @@ int TransposeTrafficPattern::dest(int source)
   int const mask_lo = (1 << _shift) - 1;
   int const mask_hi = mask_lo << _shift;
   int d =(((source >> _shift) & mask_lo) | ((source << _shift) & mask_hi));
-  if(d == source){
-    d = (d+1)%_nodes;
-  }
+
   return d;
 }
 
@@ -267,14 +262,11 @@ int BitRevTrafficPattern::dest(int source)
 {
   assert((source >= 0) && (source < _nodes));
   int result = 0;
-  int s = source ;
   for(int n = _nodes; n > 1; n >>= 1) {
     result = (result << 1) | (source % 2);
     source >>= 1;
   }
-  if(result == s){
-    result = (result+1)%_nodes;
-  }
+
   return result;
 }
 
@@ -289,10 +281,8 @@ int ShuffleTrafficPattern::dest(int source)
   assert((source >= 0) && (source < _nodes));
   int const shifted = source << 1;
   int d = ((shifted & (_nodes - 1)) | bool(shifted & _nodes));
-  if(d == source){
-     d = (d+1)%_nodes; 
-  }
-  return d; 
+
+  return d;
 }
 
 DigitPermutationTrafficPattern::DigitPermutationTrafficPattern(int nodes, int k,
@@ -320,9 +310,7 @@ int TornadoTrafficPattern::dest(int source)
       (((source / offset) % (_xr * _k) + ((_xr * _k + 1) / 2 - 1)) % (_xr * _k));
     offset *= (_xr * _k);
   }
-  if(result == source){
-    result = (result+1)%_nodes;
-  }
+
   return result;
 }
 
@@ -406,9 +394,6 @@ int UniformRandomTrafficPattern::dest(int source)
 {
   assert((source >= 0) && (source < _nodes));
   int d = RandomInt(_nodes - 1);;
-  if(d == source){
-    d = (d+1)%_nodes;
-  }
   return d;
 }
 

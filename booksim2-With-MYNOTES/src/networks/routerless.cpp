@@ -126,36 +126,49 @@ void RouterLess::readRingsRL(ifstream & in /*input file*/){
 }
 
 void RouterLess::readShortestRingsRL(ifstream & in /*input file*/){
-  string line ;
-  getline(in,line);
-  int n = atoi(line.c_str());
-  shortestRing.resize(n);
-  for(int i = 0; i < n; i++){
-    shortestRing[i].resize(n);
+	string line ;
+	getline(in,line);
+	int n = atoi(line.c_str());
+	shortestRing.resize(n);
+	for(int i = 0; i < n; i++){
+		shortestRing[i].resize(n);
 
-    getline(in,line);
-    int src = atoi(line.c_str());
+		getline(in,line);
+		int src = atoi(line.c_str());
+		bool x[100];
+		for(int i = 0; i < 100; i++){
+			x[i] = false;
+		}
 
-    for(int j = 0; j < n; j++){
+		for(int j = 0; j < n; j++){
 
-      getline(in,line);
-      replace(line.begin(), line.end(), ':', ' ');
-      replace(line.begin(), line.end(), '[', ' ');
-      replace(line.begin(), line.end(), ']', ' ');
-      replace(line.begin(), line.end(), ',', ' ');
-      stringstream str;
-      str<<line;
+			getline(in,line);
+			replace(line.begin(), line.end(), ':', ' ');
+			replace(line.begin(), line.end(), '[', ' ');
+			replace(line.begin(), line.end(), ']', ' ');
+			replace(line.begin(), line.end(), ',', ' ');
+			stringstream str;
+			str<<line;
 
-      int dest, ring_id;
-      str>>dest ; //ring id
+			int dest, ring_id;
+			str>>dest ; //ring id
 
-      while(str>>ring_id){
-        shortestRing[src][dest].push_back(ring_id);
-      }
-      random_shuffle(shortestRing[src][dest].begin(), shortestRing[src][dest].end());
-      
-    }
-  }
+			while(str>>ring_id){
+				shortestRing[src][dest].push_back(ring_id);
+				x[ring_id] = true;
+			}
+
+			//random_shuffle(shortestRing[src][dest].begin(), shortestRing[src][dest].end());
+
+		}
+		for(int i = 0; i < 100; i ++){
+			if(x[i] == false){
+				continue;
+			}
+			shortestRing[src][src].push_back(i);
+		}
+
+	}
 }
 int RouterLess::countChannelsRL(){
   int count = 0;
@@ -347,7 +360,7 @@ void min_RouterLess( const Router *r, const Flit *f, int in_channel,
 	OutputSet *outputs, bool inject ){
 
   //This is a dummy router function. The output port for any case is 0.
-  //Routing is calculated inside the router. 
+  //Routing is calculated inside the router.
 
   int out_port=-1;
   if(!inject){
