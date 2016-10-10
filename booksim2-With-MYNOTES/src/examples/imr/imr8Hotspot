@@ -31,19 +31,19 @@
 
 topology = routerless;
 
-use_space_while_stall = 1;
+use_space_while_stall = 0;
 
-router = rlBeta;
-extension_buffers = 2;
+router = rlAlpha;
+//extension_buffers = 1;
 
 routing_function = min;
-network_file = imrConfig8.txt;
-traffic = hotspot({{18,21,42,45}});
+network_file = imrConfig8_original.txt;
+traffic = hotspot({{0,9,18,27,36,45,54,63}});
 
 sample_period = 100000;
 injection_rate = 0.06; 
 
-ejectors = 2;
+ejectors = 1;
 buffer_policy = private;
 routing_delay = 0;
 
@@ -54,4 +54,4 @@ vc_buf_size = 5;
 small_buf_size = 1;
 big_buf_size = 5; //big must equal to vc_buf_size
 output_to_file = 1;
-output_file_name = runs/rlBetaHotspotOutput;
+output_file_name = runs/imr8HotspotOutput;
