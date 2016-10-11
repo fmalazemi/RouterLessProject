@@ -3,6 +3,6 @@ Such packets are pushed through any ring attached to the src router.
 They will loop through the ring and eventually get back to the source=dest. 
 
 
-
+oct 10 2016
 Hotspot and 8Hotspot were added on the OCT 10. 
 
