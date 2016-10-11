@@ -1,0 +1,216 @@
+BEGIN Configuration File: ./examples/project_inputs/config-iqevc_tp-bitcomp_c1ir-0.05_c0ir-0.37_prio-select
+//
+// EVC Router Config File -         
+//
+// Jason Deng, Mike Wang        
+//        
+
+//
+// Flow control
+//
+
+num_vcs     = 5;
+vc_buf_size = 6;
+
+wait_for_tail_credit = 0;
+
+vc_allocator = select;
+sw_allocator = select;
+alloc_iters  = 2;
+
+credit_delay   = 2;
+routing_delay  = 1;
+vc_alloc_delay = 1;
+sw_alloc_delay = 1;
+st_final_delay = 1;
+
+input_speedup     = 1;
+output_speedup    = 1;
+internal_speedup  = 1.0;
+
+//
+// Traffic
+//
+
+sim_type = latency;
+
+warmup_periods = 3;
+sample_period  = 1000;
+sim_count = 1;
+
+//
+//topoogy
+//
+
+topology = mesh;
+k  = 8;
+n  = 2;
+
+//
+// Routing
+//
+
+router = iqevc;
+routing_function = dor;
+
+packet_size = 2;
+use_read_write = 0;
+
+traffic  = bitcomp;
+injection_rate = {0.37,0.05};
+injection_rate_uses_flits = 1;
+
+classes = 2;
+class_priority = {0,1};
+priority = class;
+
+noq = 0;
+hold_switch_for_packet = 0;
+vc_prioritize_empty = 0;
+
+//
+// express virtual channel settings
+//
+
+evc = 1;
+num_evcs = 1;
+evc_prioritized_class = 1;
+selective_vc_request = 1;
+hold_switch_for_evc_packet = 1;
+evc_next_route = 0;
+
+END Configuration File: ./examples/project_inputs/config-iqevc_tp-bitcomp_c1ir-0.05_c0ir-0.37_prio-select
+0
+Class 0:
+Minimum packet latency = 18
+Average packet latency = 239.782
+Maximum packet latency = 891
+Minimum network latency = 18
+Average network latency = 226.608
+Maximum network latency = 891
+Slowest packet = 1031
+Minimum flit latency = 17
+Average flit latency = 224.784
+Maximum flit latency = 890
+Slowest flit = 2062
+Minimum fragmentation = 0
+Average fragmentation = 1.60493
+Maximum fragmentation = 41
+Minimum injected packet rate = 0.032 (at node 6)
+Average injected packet rate = 0.072
+Maximum injected packet rate = 0.182 (at node 27)
+Minimum accepted packet rate = 0.012 (at node 15)
+Average accepted packet rate = 0.0475781
+Maximum accepted packet rate = 0.164 (at node 36)
+Minimum injected flit rate = 0.064 (at node 6)
+Average injected flit rate = 0.143891
+Maximum injected flit rate = 0.363 (at node 27)
+Minimum accepted flit rate = 0.024 (at node 15)
+Average accepted flit rate = 0.0952656
+Maximum accepted flit rate = 0.329 (at node 36)
+Average injected packet length = 1.99848
+Average accepted packet length = 2.0023
+Total in-flight flits = 3227 (0 measured)
+Class 1:
+Minimum packet latency = 18
+Average packet latency = 168.692
+Maximum packet latency = 803
+Minimum network latency = 18
+Average network latency = 137.925
+Maximum network latency = 769
+Slowest packet = 2313
+Minimum flit latency = 17
+Average flit latency = 136.377
+Maximum flit latency = 768
+Slowest flit = 4626
+Minimum fragmentation = 0
+Average fragmentation = 0
+Maximum fragmentation = 0
+Minimum injected packet rate = 0.006 (at node 49)
+Average injected packet rate = 0.0226875
+Maximum injected packet rate = 0.038 (at node 48)
+Minimum accepted packet rate = 0.001 (at node 14)
+Average accepted packet rate = 0.0167656
+Maximum accepted packet rate = 0.035 (at node 31)
+Minimum injected flit rate = 0.012 (at node 49)
+Average injected flit rate = 0.0452969
+Maximum injected flit rate = 0.076 (at node 48)
+Minimum accepted flit rate = 0.002 (at node 14)
+Average accepted flit rate = 0.0335625
+Maximum accepted flit rate = 0.07 (at node 31)
+Average injected packet length = 1.99656
+Average accepted packet length = 2.00186
+Total in-flight flits = 790 (0 measured)
+latency change    = 1
+throughput change = 1
+latency change    = 1
+throughput change = 1
+0
+Class 0:
+Minimum packet latency = 18
+Average packet latency = 499.122
+Maximum packet latency = 1889
+Minimum network latency = 18
+Average network latency = 358.903
+Maximum network latency = 1888
+Slowest packet = 1411
+Minimum flit latency = 17
+Average flit latency = 356.688
+Maximum flit latency = 1887
+Slowest flit = 2822
+Minimum fragmentation = 0
+Average fragmentation = 1.68516
+Maximum fragmentation = 41
+Minimum injected packet rate = 0.0165 (at node 14)
+Average injected packet rate = 0.0553672
+Maximum injected packet rate = 0.1745 (at node 27)
+Minimum accepted packet rate = 0.01 (at node 15)
+Average accepted packet rate = 0.0429531
+Maximum accepted packet rate = 0.1645 (at node 36)
+Minimum injected flit rate = 0.033 (at node 14)
+Average injected flit rate = 0.110695
+Maximum injected flit rate = 0.349 (at node 27)
+Minimum accepted flit rate = 0.02 (at node 15)
+Average accepted flit rate = 0.0859687
+Maximum accepted flit rate = 0.329 (at node 36)
+Average injected packet length = 1.99929
+Average accepted packet length = 2.00146
+Total in-flight flits = 3282 (0 measured)
+Class 1:
+Minimum packet latency = 18
+Average packet latency = 262.809
+Maximum packet latency = 1639
+Minimum network latency = 18
+Average network latency = 186.72
+Maximum network latency = 1597
+Slowest packet = 2789
+Minimum flit latency = 17
+Average flit latency = 184.882
+Maximum flit latency = 1596
+Slowest flit = 5578
+Minimum fragmentation = 0
+Average fragmentation = 0
+Maximum fragmentation = 0
+Minimum injected packet rate = 0.0155 (at node 0)
+Average injected packet rate = 0.0245234
+Maximum injected packet rate = 0.0335 (at node 32)
+Minimum accepted packet rate = 0.0115 (at node 6)
+Average accepted packet rate = 0.0215469
+Maximum accepted packet rate = 0.0295 (at node 22)
+Minimum injected flit rate = 0.031 (at node 0)
+Average injected flit rate = 0.0490312
+Maximum injected flit rate = 0.067 (at node 32)
+Minimum accepted flit rate = 0.023 (at node 6)
+Average accepted flit rate = 0.0431172
+Maximum accepted flit rate = 0.0595 (at node 22)
+Average injected packet length = 1.99936
+Average accepted packet length = 2.00109
+Total in-flight flits = 811 (0 measured)
+latency change    = 0.519593
+throughput change = 0.108142
+latency change    = 0.358117
+throughput change = 0.221598
+Average latency for class 0 exceeded 500 cycles. Aborting simulation.
+Too many sample periods needed to converge
+Simulation unstable, ending ...
+Total run time 2.10601

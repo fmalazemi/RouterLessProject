@@ -1,0 +1,14 @@
+K 13
+svn:eol-style
+V 6
+native
+K 12
+svn:keywords
+V 2
+Id
+K 13
+svn:mergeinfo
+V 120
+/booksim2.0/branches/activity/src/routers/iq_router.cpp:3190
+/booksim2.0/branches/classes/src/routers/iq_router.cpp:3186
+END
