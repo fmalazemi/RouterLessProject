@@ -52,11 +52,6 @@ BookSimConfig::BookSimConfig( )
     AddStrField( "time_trace", "time-trace.txt" );
     _int_map["trace_mode"] = 0;   // 1: write trace output from FeS2; 2: read trace from file and input into BookSim
 
-
-    _int_map["deflection_record"] = 0;
-    _int_map["block_record"] = 0;
-
-
   //========================================================
   // Network options
   //========================================================
@@ -66,7 +61,7 @@ BookSimConfig::BookSimConfig( )
   _int_map["extension_buffers"] = 1;
   _int_map["small_buf_size"] = 1;
   _int_map["big_buf_size"] = 1;
-  _int_map["output_to_file"] = 0 ; 
+  _int_map["output_to_file"] = 0 ;
   AddStrField("output_file_name", "output.txt");
 
   // Channel length listing file
