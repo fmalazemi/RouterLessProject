@@ -64,7 +64,7 @@ packet_size = 3;
 
 // Simulation
 sim_type = latency;
-sample_period = 100000;
+sample_period = 10000;
 output_file_name = runs/meshUniformOutput;
 
 sim_type       = latency;

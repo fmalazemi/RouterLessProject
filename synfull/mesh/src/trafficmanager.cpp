@@ -1458,6 +1458,8 @@ bool TrafficManager::_SingleSim( )
     vector<double> prev_accepted(_classes, 0.0);
     bool clear_last = false;
     int total_phases = 0;
+
+/*
     while( ( total_phases < _max_samples ) && 
            ( ( _sim_state != running ) || 
              ( converged < 3 ) ) ) {
@@ -1466,13 +1468,16 @@ bool TrafficManager::_SingleSim( )
             clear_last = false;
             _ClearStats( );
         }
-    
+  */  
+     _sim_state = running;
+ 
+    while (_sim_state != done) {
     
         for ( int iter = 0; iter < _sample_period; ++iter )
             _Step( );
     
-        //cout << _sim_state << endl;
-
+        cout << _sim_state << endl;
+        cout << "Sample period: " << total_phases << endl;
         UpdateStats();
         DisplayStats();
     
@@ -1543,7 +1548,7 @@ bool TrafficManager::_SingleSim( )
             }
       
         }
-    
+/*    
         // Fail safe for latency mode, throughput will ust continue
         if ( _measure_latency && ( lat_exc_class >= 0 ) ) {
       
@@ -1641,6 +1646,35 @@ bool TrafficManager::_SingleSim( )
     }
   
     return ( converged > 0 );
+*/
+
+
+                if ( _measure_latency && ( lat_exc_class >= 0 ) ) {
+                        cout << "Average latency for class " << lat_exc_class <<
+                                        " exceeded " << _latency_thres[lat_exc_class] <<
+                                        " cycles. Aborting simulation." << endl;
+                        converged = 0;
+                        _sim_state = draining;
+                        _drain_time = _time;
+                        break;
+
+                }
+
+                if(_sim_state == running) {
+                        if ( ( !_measure_latency || ( lat_chg_exc_class < 0 ) ) &&
+                                        ( acc_chg_exc_class < 0 ) ) {
+                                ++converged;
+                        } else {
+                                converged = 0;
+                        }
+                }
+                ++total_phases;
+        }
+
+        _drain_time = _time;
+
+        return ( true );
+
 }
 
 bool TrafficManager::Run( )
