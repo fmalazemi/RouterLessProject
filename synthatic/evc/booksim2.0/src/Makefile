@@ -31,9 +31,9 @@ MOC = /usr/lib/qt4/bin/moc
 YACC   = bison -y
 DEFINE = 
 DEFINE_TEST = -DUSE_GUI
-INCPATH = -I. -Iarbiters -Iallocators -Irouters -Inetworks -Ipower
+INCPATH = -I. -Iarbiters -Iallocators -Irouters -Inetworks -Ipower -Inetstream
 CPPFLAGS += -Wall $(INCPATH) $(DEFINE)
-#CPPFLAGS += -O3
+CPPFLAGS += -O3
 CPPFLAGS += -g
 LFLAGS +=  
 
@@ -65,7 +65,10 @@ CPP_SRCS = main.cpp \
    rng_double_wrapper.cpp\
    power_module.cpp \
    switch_monitor.cpp \
-   buffer_monitor.cpp
+   buffer_monitor.cpp \
+   fes2_interface.cpp \
+   fes2_trafficmanager.cpp \
+   trace_generator.cpp
 
 ifeq ($(DEFINE) , $(DEFINE_TEST))
 	CPP_SRCS += \
@@ -85,6 +88,7 @@ ALLOCATORS:= $(wildcard allocators/*.cpp)
 ARBITERS:= $(wildcard arbiters/*.cpp)
 ROUTERS:= $(wildcard routers/*.cpp)
 POWER:= $(wildcard power/*.cpp)
+NETSTREAM:= $(wildcard netstream/*.cpp) 
 
 #--- Make rules ---
 OBJS :=  $(LEX_OBJS) $(YACC_OBJS)\
@@ -93,7 +97,9 @@ OBJS :=  $(LEX_OBJS) $(YACC_OBJS)\
  $(ALLOCATORS:allocators/%.cpp=${OBJDIR}/%.o)\
  $(ARBITERS:arbiters/%.cpp=${OBJDIR}/%.o)\
  $(ROUTERS:routers/%.cpp=${OBJDIR}/%.o)\
- $(POWER:power/%.cpp=${OBJDIR}/%.o)
+ $(POWER:power/%.cpp=${OBJDIR}/%.o)\
+ $(NETSTREAM:netstream/%.cpp=${OBJDIR}/%.o)
+ 
 
 .PHONY: clean
 
@@ -137,6 +143,11 @@ ${OBJDIR}/%.o: routers/%.cpp
 # rules to compile power classes
 ${OBJDIR}/%.o: power/%.cpp
 	$(CXX) $(CPPFLAGS) -c $< -o $@
+
+# rules to compile networks
+${OBJDIR}/%.o: netstream/%.cpp 
+	$(CXX) $(CPPFLAGS) -c $< -o $@
+
 
 clean:
 	rm -f $(OBJS) 

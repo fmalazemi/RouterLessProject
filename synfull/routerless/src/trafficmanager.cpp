@@ -36,6 +36,7 @@
 #include "booksim_config.hpp"
 #include "trafficmanager.hpp"
 #include "batchtrafficmanager.hpp"
+#include "fes2_trafficmanager.hpp"
 #include "random_utils.hpp"
 #include "vc.hpp"
 #include "packet_reply_info.hpp"
@@ -43,16 +44,19 @@
 TrafficManager * TrafficManager::New(Configuration const & config,
                                      vector<Network *> const & net)
 {
-    TrafficManager * result = NULL;
-    string sim_type = config.GetStr("sim_type");
-    if((sim_type == "latency") || (sim_type == "throughput")) {
-        result = new TrafficManager(config, net);
-    } else if(sim_type == "batch") {
-        result = new BatchTrafficManager(config, net);
-    } else {
-        cerr << "Unknown simulation type: " << sim_type << endl;
-    }
-    return result;
+  TrafficManager * result = NULL;
+  string sim_type = config.GetStr("sim_type");
+  if((sim_type == "latency") || (sim_type == "throughput")) {
+          result = new TrafficManager(config, net);
+  } else if(sim_type == "batch") {
+          result = new BatchTrafficManager(config, net);
+  } else if(sim_type == "fes2") {
+          result = new FeS2TrafficManager(config, net);
+  } else {
+          cerr << "Unknown simulation type: " << sim_type << endl;
+  }
+
+  return result;
 }
 
 TrafficManager::TrafficManager( const Configuration &config, const vector<Network *> & net )
@@ -2209,7 +2213,7 @@ void TrafficManager::DisplayOverallStats( ostream & os ) const {
 
 void TrafficManager::DisplayOverallStatsTOFile() const {
     assert(output_to_file);
-    ofstream  file; 
+    ofstream  file;
     file.open(output_file_name.c_str(), ios::out | ios::app);
     for ( int c = 0; c < _classes; ++c ) {
 

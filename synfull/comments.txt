@@ -1,0 +1,5 @@
+#Booksim_Synfull
+- vc out of bound ERROR
+  The auther programming fes2_trafficmanager to select packet type according to current subnetwork value.
+  If you have only one, then you will get an error in one of the routers. I comment parts of _Generating
+  flit function to overcome this.   

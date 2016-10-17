@@ -37,6 +37,26 @@
 
 BookSimConfig::BookSimConfig( )
 { 
+
+  //===== additional parameters for FeS2 integration:
+  _int_map["fes2_concentrate"] = 0; // 0: map cache and directory to separate nodes, 1: map both to the same node
+  _int_map["flit_width"] = 8; //in fes2 mode it defines the flit width in bytes
+
+  _int_map["fes2_mapping"] = 0;
+  AddStrField("fes2_mapping", ""); // workaraound to allow for vector specification
+
+  AddStrField("fes2_host", "localhost"); // for connecting FeS2
+  _int_map["fes2_port"] = 5050; // for connecting FeS2
+  _int_map["ideal_interconnect"] = 0; // set to 1 for simulating an ideal interconnect (latency: 1 hop, BW: unlimited)
+
+  AddStrField( "trace_file", "trace-file.txt" );
+  AddStrField( "time_trace", "time-trace.txt" );
+  _int_map["trace_mode"] = 0;   // 1: write trace output from FeS2; 2: read trace from file and input into BookSim
+
+
+
+
+
     //========================================================
     // Network options
     //========================================================

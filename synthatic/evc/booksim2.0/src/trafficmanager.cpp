@@ -38,6 +38,7 @@
 #include "random_utils.hpp" 
 #include "vc.hpp"
 #include "packet_reply_info.hpp"
+#include "fes2_trafficmanager.hpp"
 
 TrafficManager * TrafficManager::New(Configuration const & config,
 				     vector<Network *> const & net)
@@ -48,6 +49,8 @@ TrafficManager * TrafficManager::New(Configuration const & config,
     result = new TrafficManager(config, net);
   } else if(sim_type == "batch") {
     result = new BatchTrafficManager(config, net);
+  } else if(sim_type == "fes2"){
+	result = new FeS2TrafficManager(config, net);
   } else {
     cerr << "Unknown simulation type: " << sim_type << endl;
   } 
