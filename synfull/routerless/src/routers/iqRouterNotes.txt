@@ -1,0 +1,94 @@
+#Functions description
+
+void IQRouter::_receiveFlits(){
+  loop through _input_channels vector:
+    If a flit f is waiting at _input_channels[i]:
+      add (i,flit) to _in_queue_flits vector
+  return True, to indicate that we have a received flit
+}
+
+void IQRouter::_InputQueuing( ) {
+  enqueue all received flits push down in _in_queue_flits vector (vector of pair (input, flit))
+  Iterate through _in_queue_flits vector:
+    If (input i, flit f) is in _in_queue_flits:
+      add flit f to _buf[i]->AddFlit(f)
+      
+      write _bufferMonitor->write(input, f) ;
+      
+      change state of _buf[i] { many stuff are going on here }
+    
+  remove all elements of _in_queue_flits vector
+  Process credits in _proc_credits
+}
+
+
+void IQRouter::_RouteEvaluate( ){
+  assert(_router_delay > 0)
+  iterate through vector _route_vcs of (time, (input i, virtual channel vc)):
+    if time == 0 
+      break and exit function
+    else
+      time = GetSimTime() + router_delay -1 
+      do some checkings to make sure everything is correct  
+}
+
+void IQRouter::_RouteUpdate( ){
+  assert(_router_delay > 0)
+  Process elements in _router_vc vector:
+        element = _route_vcs.front() of type (time, (input i, virtual channel vc ))
+        assert(element.time == GetSimTime())
+        assert values of input i and vc from element
+        compute route for (vc, this (current router), flit f, intput i) using 
+                _buf[i]->Route(f->vc, routering function _rf, this (current router), flit f, input i);
+        change state of intput i buffer to VC::vc_alloc by 
+                _buf[i]->SetState(f->vc, VC::vc_alloc);
+        _route_vcs.pop()
+}
+
+void IQRouter::_VCAllocEvaluate( ){
+  //TO BE DONE
+}
+
+void IQRouter::_VCAllocUpdate( ){
+  //TO BE DONE
+}
+
+void IQRouter::_SWHoldEvaluate( ){
+  By defaults settings, this function is not used. 
+  //TO BE DONE
+}
+void IQRouter::_SWHoldUpdate( ){
+  //TO BE DONE
+}
+bool IQRouter::_SWAllocAddReq(int input, int vc, int output){
+  //TO BE DONE
+}
+
+void IQRouter::_SWAllocEvaluate( ){
+  //TO BE DONE
+}
+
+void IQRouter::_SWAllocUpdate( ){
+  //TO BE DONE
+}
+void IQRouter::_SwitchEvaluate( ){
+  //TO BE DONE
+}
+void IQRouter::_SwitchUpdate( ){
+  //TO BE DONE
+}
+void IQRouter::_OutputQueuing( ){ // This is related to credits only. 
+  gets credit info from _out_queue_credits
+  add such info to _credit_buffer[input i].push(credit);
+  
+  clear _out_queue_credits
+}
+
+void IQRouter::_SendFlits( ){
+  loop through all outputs buffers :
+    if( _output_buffer[i] is not empty):
+      get the front flit f =  _output_buffer[i].front( );  
+      remove f from _output_buffer[i].front( );
+      push f to the ith outputchannel:
+          _output_channels[output]->Send( f );
+}

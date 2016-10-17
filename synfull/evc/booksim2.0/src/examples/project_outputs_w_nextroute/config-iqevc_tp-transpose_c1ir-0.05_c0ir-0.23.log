@@ -1,0 +1,281 @@
+BEGIN Configuration File: ./examples/project_inputs/config-iqevc_tp-transpose_c1ir-0.05_c0ir-0.23
+//
+// EVC Router Config File -         
+//
+// Jason Deng, Mike Wang        
+//        
+
+//
+// Flow control
+//
+
+num_vcs     = 5;
+vc_buf_size = 6;
+
+wait_for_tail_credit = 0;
+
+vc_allocator = select;
+sw_allocator = select;
+alloc_iters  = 2;
+
+credit_delay   = 2;
+routing_delay  = 1;
+vc_alloc_delay = 1;
+sw_alloc_delay = 1;
+st_final_delay = 1;
+
+input_speedup     = 1;
+output_speedup    = 1;
+internal_speedup  = 1.0;
+
+//
+// Traffic
+//
+
+sim_type = latency;
+
+warmup_periods = 3;
+sample_period  = 1000;
+sim_count = 1;
+
+//
+//topoogy
+//
+
+topology = mesh;
+k  = 8;
+n  = 2;
+
+//
+// Routing
+//
+
+router = iqevc;
+routing_function = dor;
+
+packet_size = 2;
+use_read_write = 0;
+
+traffic  = transpose;
+injection_rate = {0.23,0.05};
+injection_rate_uses_flits = 1;
+
+classes = 2;
+class_priority = {0,1};
+priority = class;
+
+noq = 0;
+hold_switch_for_packet = 0;
+vc_prioritize_empty = 0;
+
+//
+// express virtual channel settings
+//
+
+evc = 1;
+num_evcs = 1;
+evc_prioritized_class = 1;
+selective_vc_request = 1;
+hold_switch_for_evc_packet = 1;
+evc_next_route = 1;
+
+END Configuration File: ./examples/project_inputs/config-iqevc_tp-transpose_c1ir-0.05_c0ir-0.23
+0
+Class 0:
+Minimum packet latency = 8
+Average packet latency = 85.1583
+Maximum packet latency = 888
+Minimum network latency = 8
+Average network latency = 83.6026
+Maximum network latency = 887
+Slowest packet = 995
+Minimum flit latency = 5
+Average flit latency = 81.7826
+Maximum flit latency = 886
+Slowest flit = 1991
+Minimum fragmentation = 0
+Average fragmentation = 1.48713
+Maximum fragmentation = 37
+Minimum injected packet rate = 0.03 (at node 49)
+Average injected packet rate = 0.0942344
+Maximum injected packet rate = 0.14 (at node 9)
+Minimum accepted packet rate = 0.01 (at node 15)
+Average accepted packet rate = 0.0813125
+Maximum accepted packet rate = 0.139 (at node 9)
+Minimum injected flit rate = 0.06 (at node 49)
+Average injected flit rate = 0.18825
+Maximum injected flit rate = 0.28 (at node 9)
+Minimum accepted flit rate = 0.02 (at node 15)
+Average accepted flit rate = 0.162797
+Maximum accepted flit rate = 0.278 (at node 9)
+Average injected packet length = 1.99768
+Average accepted packet length = 2.00211
+Total in-flight flits = 1679 (0 measured)
+Class 1:
+Minimum packet latency = 8
+Average packet latency = 56.4057
+Maximum packet latency = 678
+Minimum network latency = 8
+Average network latency = 53.7228
+Maximum network latency = 678
+Slowest packet = 2321
+Minimum flit latency = 7
+Average flit latency = 52.5488
+Maximum flit latency = 677
+Slowest flit = 4642
+Minimum fragmentation = 0
+Average fragmentation = 0
+Maximum fragmentation = 0
+Minimum injected packet rate = 0.01 (at node 57)
+Average injected packet rate = 0.0245781
+Maximum injected packet rate = 0.034 (at node 26)
+Minimum accepted packet rate = 0.002 (at node 15)
+Average accepted packet rate = 0.0215312
+Maximum accepted packet rate = 0.033 (at node 62)
+Minimum injected flit rate = 0.02 (at node 57)
+Average injected flit rate = 0.0491406
+Maximum injected flit rate = 0.068 (at node 26)
+Minimum accepted flit rate = 0.004 (at node 15)
+Average accepted flit rate = 0.0430781
+Maximum accepted flit rate = 0.066 (at node 62)
+Average injected packet length = 1.99936
+Average accepted packet length = 2.00073
+Total in-flight flits = 411 (0 measured)
+latency change    = 1
+throughput change = 1
+latency change    = 1
+throughput change = 1
+0
+Class 0:
+Minimum packet latency = 8
+Average packet latency = 130.448
+Maximum packet latency = 1821
+Minimum network latency = 8
+Average network latency = 113.55
+Maximum network latency = 1821
+Slowest packet = 1520
+Minimum flit latency = 5
+Average flit latency = 111.638
+Maximum flit latency = 1820
+Slowest flit = 3040
+Minimum fragmentation = 0
+Average fragmentation = 1.61324
+Maximum fragmentation = 47
+Minimum injected packet rate = 0.0195 (at node 6)
+Average injected packet rate = 0.0884375
+Maximum injected packet rate = 0.133 (at node 9)
+Minimum accepted packet rate = 0.0085 (at node 15)
+Average accepted packet rate = 0.0813047
+Maximum accepted packet rate = 0.1325 (at node 9)
+Minimum injected flit rate = 0.039 (at node 6)
+Average injected flit rate = 0.176797
+Maximum injected flit rate = 0.266 (at node 9)
+Minimum accepted flit rate = 0.017 (at node 15)
+Average accepted flit rate = 0.162688
+Maximum accepted flit rate = 0.265 (at node 9)
+Average injected packet length = 1.99912
+Average accepted packet length = 2.00096
+Total in-flight flits = 1864 (0 measured)
+Class 1:
+Minimum packet latency = 8
+Average packet latency = 101.927
+Maximum packet latency = 1335
+Minimum network latency = 8
+Average network latency = 80.3758
+Maximum network latency = 1327
+Slowest packet = 2688
+Minimum flit latency = 7
+Average flit latency = 78.9815
+Maximum flit latency = 1326
+Slowest flit = 5376
+Minimum fragmentation = 0
+Average fragmentation = 0
+Maximum fragmentation = 0
+Minimum injected packet rate = 0.015 (at node 57)
+Average injected packet rate = 0.0248672
+Maximum injected packet rate = 0.034 (at node 14)
+Minimum accepted packet rate = 0.0125 (at node 40)
+Average accepted packet rate = 0.0233906
+Maximum accepted packet rate = 0.03 (at node 19)
+Minimum injected flit rate = 0.03 (at node 57)
+Average injected flit rate = 0.0496797
+Maximum injected flit rate = 0.068 (at node 14)
+Minimum accepted flit rate = 0.025 (at node 40)
+Average accepted flit rate = 0.0467969
+Maximum accepted flit rate = 0.06 (at node 19)
+Average injected packet length = 1.9978
+Average accepted packet length = 2.00067
+Total in-flight flits = 392 (0 measured)
+latency change    = 0.347186
+throughput change = 0.000672301
+latency change    = 0.446606
+throughput change = 0.0794658
+0
+Class 0:
+Minimum packet latency = 8
+Average packet latency = 270.921
+Maximum packet latency = 2760
+Minimum network latency = 8
+Average network latency = 155.122
+Maximum network latency = 2760
+Slowest packet = 1823
+Minimum flit latency = 5
+Average flit latency = 152.842
+Maximum flit latency = 2759
+Slowest flit = 3646
+Minimum fragmentation = 0
+Average fragmentation = 1.72548
+Maximum fragmentation = 79
+Minimum injected packet rate = 0 (at node 57)
+Average injected packet rate = 0.0819531
+Maximum injected packet rate = 0.138 (at node 19)
+Minimum accepted packet rate = 0.003 (at node 7)
+Average accepted packet rate = 0.0821875
+Maximum accepted packet rate = 0.137 (at node 26)
+Minimum injected flit rate = 0 (at node 57)
+Average injected flit rate = 0.163906
+Maximum injected flit rate = 0.276 (at node 19)
+Minimum accepted flit rate = 0.006 (at node 7)
+Average accepted flit rate = 0.164453
+Maximum accepted flit rate = 0.274 (at node 26)
+Average injected packet length = 2
+Average accepted packet length = 2.00095
+Total in-flight flits = 1829 (0 measured)
+Class 1:
+Minimum packet latency = 8
+Average packet latency = 148.221
+Maximum packet latency = 2466
+Minimum network latency = 8
+Average network latency = 112.238
+Maximum network latency = 2048
+Slowest packet = 4649
+Minimum flit latency = 7
+Average flit latency = 110.677
+Maximum flit latency = 2047
+Slowest flit = 9298
+Minimum fragmentation = 0
+Average fragmentation = 0
+Maximum fragmentation = 0
+Minimum injected packet rate = 0.009 (at node 56)
+Average injected packet rate = 0.0238281
+Maximum injected packet rate = 0.04 (at node 57)
+Minimum accepted packet rate = 0.014 (at node 33)
+Average accepted packet rate = 0.0243906
+Maximum accepted packet rate = 0.037 (at node 38)
+Minimum injected flit rate = 0.018 (at node 56)
+Average injected flit rate = 0.0477031
+Maximum injected flit rate = 0.08 (at node 57)
+Minimum accepted flit rate = 0.028 (at node 33)
+Average accepted flit rate = 0.0487656
+Maximum accepted flit rate = 0.074 (at node 38)
+Average injected packet length = 2.00197
+Average accepted packet length = 1.99936
+Total in-flight flits = 323 (0 measured)
+latency change    = 0.518501
+throughput change = 0.0107363
+latency change    = 0.312332
+throughput change = 0.0403717
+Average latency for class 0 exceeded 500 cycles. Aborting simulation.
+Too many sample periods needed to converge
+Simulation unstable, ending ...
+Total run time 6.13768

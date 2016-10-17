@@ -1,0 +1,60 @@
+Here I describe the files structures. 
+
+------------------------------
+
+1. anyNetN.txt. 
+
+------------------------------
+
+This is the main file that describes the network connections. It start with N routers connected to N nodes. 
+Then each ring is described in circler fashion. e.g. 
+router i router (i+1) router j 
+//router j is a router connected to a core and router i and router i+1 are part of the same ring. 
+
+
+------------------------------
+
+2. portRingN.txt
+
+------------------------------
+
+This allow node i to choose correct port number to reach to nodes j in the net. 
+N*N
+i
+j: p1 p2 ... pm
+
+N*N is number of nodes 
+i is the node number
+j is the destination from j and p1 p2 ... pm are port numbers on router i to reach j. Also p1 is shortest and pm is longest. 
+
+
+------------------------------
+
+3. dummyPortsN.txt
+for NxN network, port to use to reach next router in the ring. 
+i: j
+i is router number.
+j is port number. 
+
+
+
+------------------------------
+
+3. imrConfigN.txt. 
+
+------------------------------
+
+for NxN mesh,
+M
+i: i1 i2 i3 .... iT
+N*N
+j
+k: k1 k2 ... kG
+
+M is the number of rings. 
+1<=i<=M is ring number and i1 i2 i3 .... iT are nodes on this ring
+N*N is total number of nodes. 
+j is nodes number
+k is the destination from j and  k1 k2 ... kG is the list of rings node j can use to reach k 
+                                                where k1 is shortest and kG is longest path.  
+

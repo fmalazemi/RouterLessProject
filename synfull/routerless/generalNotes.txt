@@ -1,0 +1,57 @@
+1. In anynet mode, you will build a routing table using djistra algorithm. 
+2. routers numbers in anynet_net file must be continues. (i.e. if router 100 exists, so doest router 99); 
+
+3. The size of a packet in flits is define by "packet_size = 4;"
+
+
+
+4. BufferMonitor is an object in every router and tracks how many reads and write for every input buffer.  
+Even the function BufferedMonitor::cycle() does nothing for the final output. 
+
+
+5. SwitchMonitor is similar to BufferMonitor. It just tracks how many traversals of flits from one input to one output. 
+Such data does not contiribute to the final output. 
+
+
+6. _route_vc is a <pair, pair<input, vc>> vector defined in iq_router.cpp.
+
+
+7. RouteEvaluate is called after inputqueueing. It will be executed only if routing_delay != 0. it make sure that for every element
+(time, (input, vc)) in _route_vc vector,  the front flit in _buf[input].frontFlit(vc) is the head flit.  
+By default the time = -1, and it will be set here to time =  GetSimTime() + _routing_delay - 1. 
+Moreover, it assure _buf[input]->Empty(vc) is not empty and the state of _buf[input].getState(vc) is set to VC::routing.
+So it just a checking stage and time update.
+
+
+8. _RouteUpdate is called after _routeEvalutate. it reads and removed every element in _route_vc. Say (time, (input, vc)) is the first
+element in _route_vc,first checks if the time correctly set (time < 0) || (GetSimTime() < time), if _buf[input]->Empty(vc) is false
+(i.e. not empty) and _buf[input].getState(vc) is set to VC::routing, and if the front flit is head in _buf[input].frontFlit(vc). 
+After the checks, it routes the input in vc of _buf[input] using  cur_buf->Route(vc, _rf, this, f, input). Moreover, the vc of
+_buf[input] state is set to VC::vc_alloc using  cur_buf->SetState(vc, VC::vc_alloc). Then, push_back (-1, ((input,vc),-1)) to
+_sw_alloc_vcs  if _speculative is true and push_back  (-1, ((input,vc), -1)) to  _vc_alloc_vcs only if _vc_allocator is true. 
+The last step is pop the front element of _route_vc (i.e.  (time, (input, vc)) we used for the above). 
+
+
+9. _VCAllocEvaluate. Does some checks, set the time and assure it  maps an output_and_vc for every element. The result for every
+element in _vc_alloc_vcs is updated as (time, ((input, vc), output_and_vc)). The changes are only for time and output_and_vc. 
+
+10. _SwitchEvaluate. Sets the time for elements in _crossbar_flits (element structure 
+<time, <flit, <expanded_input, expanded_output> > >) and make sure the flit is not null. If an element has time set already 
+(i.e. >= 0), the loop breaks and hence a return. 
+
+12. _SwitchUpdate. Loops through elements of _crossbar_flits until _crossbar_flits is empty or the time of an element is not set. 
+in the loop, the procedure initiate  _switchMonitor->traversal(input, output, f) ; and     _output_buffer[output].push(f);. 
+After that, the element is poped out from _crossbar_flits. 
+ 
+
+13. To speed up the router, use _internal_speedup to be greater than 1.0. 
+
+14. Function Evaluate() in the router is executed Mathfloor[_internal_speedup] number of times. So, if you want your router to process
+all incoming traffic in one cycle, execute Evaluate until no more traffic to process. 
+
+15. For every flit sent, a credit is sent. 
+
+16. In every cycle, readFlit reads only one flit from every inputChannl. Similarly, every output channel sent only one flit per output. 
+
+
+17. All the network channels are stored in Network module. InjectionLinks are stored in vectors _inject and _inject_cred, EjuctionLinks are stored in vectors  _eject and _eject_cred, and other channels in vectors _chan and chan_cred. Routers are directly linked with inputs and outputs channel. Network.cpp is used to access inject and eject channnels. 

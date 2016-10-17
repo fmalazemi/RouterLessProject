@@ -1,0 +1,7 @@
+16 // number of local routers attached to cores
+4 // number of global routers 
+8 // number of local rings is 8, each ring on line 
+N: [a1, a2, a3, ... , ax] // N is local ring id, followed by ordered list 
+			   // [routerID, ... , routerID]
+1 // number of global rings, each on a line. 
+M: [b1, b2, ... , by]  
