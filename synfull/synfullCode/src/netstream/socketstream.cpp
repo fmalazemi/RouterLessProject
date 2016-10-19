@@ -25,9 +25,12 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 #include <cstdio>
 #include <cerrno>
 
-int SocketStream::listen()
+int SocketStream::listen(int sid)
 {
-	const char *socket_path = "./socket";
+	char socketID = '0' + sid;
+	string socketName = "./socket";
+	socketName += socketID;  
+	const char *socket_path = socketName.c_str();
     // Create a socket
 	if ( (so = socket(AF_UNIX, SOCK_STREAM, 0)) < 0) {
 		cout << "Error creating socket." << endl;
@@ -75,9 +78,12 @@ SocketStream* SocketStream::accept()
 	return new SocketStream(clientsock, (struct sockaddr*)&clientaddr, clientaddrlen);
 }
 
-int SocketStream::connect()
+int SocketStream::connect(int sid)
 {
-	const char *socket_path = "./socket";
+	char socketID = '0' + sid;
+        string socketName = "./socket";
+        socketName += socketID;  
+        const char *socket_path = socketName.c_str();
 	// Create a socket.
 	if ( (so = socket(AF_UNIX, SOCK_STREAM, 0)) < 0 ){
 		cout << "Error creating socket." << endl;

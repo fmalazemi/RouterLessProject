@@ -94,10 +94,10 @@ void printPacket(InjectReqMsg msg) {
 	cout << endl;
 }
 
-void connect() {
+void connect(int sid) {
 #if CONNECT
 	// connect to network simulator
-	assert(m_channel.connect() == 0);
+	assert(m_channel.connect(sid) == 0);
 
 	// send request to initialize
 	InitializeReqMsg req;
@@ -396,7 +396,7 @@ void reset_ss() {
 	state = 1;
 }
 
-void Run(unsigned int numCycles, bool ssExit) {
+void Run(unsigned int numCycles, bool ssExit, unsigned int sid) {
 	next_interval = 0;
 	next_hinterval = 0;
 
@@ -409,7 +409,7 @@ void Run(unsigned int numCycles, bool ssExit) {
 	acceptable_hmse = calculate_mse(predict, g_hierSState);
 
 	//Connect to network simulator
-	connect();
+	connect((int) sid);
 
 	//Iterate through each cycle and inject packets
 	for(cycle = 0; cycle < numCycles; ++cycle) {

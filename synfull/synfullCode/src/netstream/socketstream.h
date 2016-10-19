@@ -71,11 +71,11 @@ public:
 		memcpy(&addr, in_addr, in_addrlen);
 	}
 
-	int listen();
+	int listen(int sid);
 
 	SocketStream* accept();
 
-	int connect();
+	int connect(int sid);
 
     // read from the socket
     int get(void *data, int number);

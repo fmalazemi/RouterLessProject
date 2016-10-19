@@ -17,10 +17,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  * Establish this as a server over a socket and wait for the client (TrafficManager)
  * to connect.
  */
-int NetworkInterface::Init() {
+int NetworkInterface::Init(int sid) {
 	SocketStream listenSocket;
 
-	if(listenSocket.listen() < 0) {
+	if(listenSocket.listen(sid) < 0) {
 		return -1;
 	}
 

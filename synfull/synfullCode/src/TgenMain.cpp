@@ -28,9 +28,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 using namespace std;
 
 int main(int argc, char **argv) {
-	if(argc != 4) {
-		cerr << "Need 3 parameters: model file, number of cycles, exit at "
-				"steady state" << endl;
+	if(argc != 5) {
+		cerr << "Need 4 parameters: model file, number of cycles, exit at "
+				"steady state, socket id" << endl;
 		return -1;
 	}
 
@@ -50,11 +50,15 @@ int main(int argc, char **argv) {
 	unsigned int numCycles = (int) strtoul(argv[2], NULL, 0);
 
 	//Whether or not we should exit the simulation prematurely when steady
-	//state is reached
+	//state is reachede
 	bool ssExit = ((int) strtoul(argv[3], NULL, 0)) == 1;
 
+	//socket id 
+        unsigned int sid = (int) strtoul(argv[4], NULL, 0);
+
+
 	//Run the traffic generator
-	Run(numCycles, ssExit);
+	Run(numCycles, ssExit, sid);
 
 	return 0;
 }

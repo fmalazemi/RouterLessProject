@@ -18,7 +18,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 class NetworkInterface {
 public:
-	int Init();
+	int Init(int sid);
 	int Step();
 private:
 	SocketStream* m_channel;
