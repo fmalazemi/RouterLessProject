@@ -43,8 +43,6 @@ BookSimConfig::BookSimConfig( )
   _int_map["fes2_concentrate"] = 0; // 0: map cache and directory to separate nodes, 1: map both to the same node
   _int_map["flit_width"] = 8; //in fes2 mode it defines the flit width in bytes
 
-  _int_map["fes2_mapping"] = 0;
-  AddStrField("fes2_mapping", ""); // workaraound to allow for vector specification
 
   AddStrField("fes2_host", "localhost"); // for connecting FeS2
   _int_map["fes2_port"] = 5050; // for connecting FeS2
@@ -53,6 +51,33 @@ BookSimConfig::BookSimConfig( )
   AddStrField( "trace_file", "trace-file.txt" );
   AddStrField( "time_trace", "time-trace.txt" );
   _int_map["trace_mode"] = 0;   // 1: write trace output from FeS2; 2: read trace from file and input into BookSim
+
+
+  _int_map["synfull_instances"] = 1;
+  
+  _int_map["fes2_mapping_0"] = 0;
+  AddStrField("fes2_mapping_0", ""); // workaraound to allow for vector specification
+_int_map["fes2_mapping_1"] = 0;
+  AddStrField("fes2_mapping_1", ""); // workaraound to allow for vector specification
+_int_map["fes2_mapping_2"] = 0;
+  AddStrField("fes2_mapping_2", ""); // workaraound to allow for vector specification
+_int_map["fes2_mapping_3"] = 0;
+  AddStrField("fes2_mapping_3", ""); // workaraound to allow for vector specification
+_int_map["fes2_mapping_4"] = 0;
+  AddStrField("fes2_mapping_4", ""); // workaraound to allow for vector specification
+_int_map["fes2_mapping_5"] = 0;
+  AddStrField("fes2_mapping_5", ""); // workaraound to allow for vector specification
+_int_map["fes2_mapping_6"] = 0;
+  AddStrField("fes2_mapping_6", ""); // workaraound to allow for vector specification
+_int_map["fes2_mapping_7"] = 0;
+  AddStrField("fes2_mapping_7", ""); // workaraound to allow for vector specification
+_int_map["fes2_mapping_8"] = 0;
+  AddStrField("fes2_mapping_8", ""); // workaraound to allow for vector specification
+_int_map["fes2_mapping_9"] = 0;
+  AddStrField("fes2_mapping_9", ""); // workaraound to allow for vector specification
+
+
+
 
   //========================================================
   // Network options

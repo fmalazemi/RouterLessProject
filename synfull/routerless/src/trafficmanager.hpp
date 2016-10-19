@@ -43,6 +43,7 @@
 #include "routefunc.hpp"
 #include "outputset.hpp"
 #include "injection.hpp"
+#include "fes2_interface.hpp"
 
 //register the requests to a node
 class PacketReplyInfo;
@@ -54,8 +55,19 @@ private:
   vector<vector<int> > _packet_size;
   vector<vector<int> > _packet_size_rate;
   vector<int> _packet_size_max_val;
+       struct FeS2PayLoad {
+                  int fes2_id;
+                  int fes2_subnetwork;
+          };
 
+          int  _flit_width;
+          int _ideal_interconnect;
+
+          TraceGenerator *_time_trace;
 protected:
+
+  FeS2Interface *_fes2_interface;
+
   int _nodes;
   int _routers;
   int _vcs;
@@ -276,7 +288,7 @@ protected:
   bool _PacketsOutstanding( ) const;
 
   virtual int  _IssuePacket( int source, int cl );
-  void _GeneratePacket( int source, int size, int cl, int time );
+  void _GeneratePacket( int source, int size, int cl, int time, int, int, int );
 
   virtual void _ClearStats( );
 

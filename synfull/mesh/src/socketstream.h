@@ -62,11 +62,11 @@ public:
 		memcpy(&addr, in_addr, in_addrlen);
 	}
 
-	int listen(const char *host, int port);
+	int listen(const char *host, int port, int sid);
 
 	SocketStream* accept();
 
-	int connect(const char *host, int port);
+	int connect(const char *host, int port, int sid);
 
     // read from the socket
     int get(void *data, int number);

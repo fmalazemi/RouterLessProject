@@ -40,7 +40,7 @@ routing_function = min;
 network_file = imrConfig8.txt;
 traffic = uniform;
 
-sample_period = 100000;
+sample_period = 1000;
 injection_rate = 0.255; 
 
 ejectors = 2;
@@ -55,3 +55,20 @@ small_buf_size = 1;
 big_buf_size = 5; //big must equal to vc_buf_size
 output_to_file = 1;
 output_file_name = runs/rlAlphaUniformOutput;
+
+
+sim_type = fes2; 
+flit_width = 16;
+synfull_instances = 4;
+//fes2_mapping_0 = {0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62};
+//fes2_mapping_1 = {1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59,61,63};
+
+fes2_mapping_0 = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
+fes2_mapping_1 = {16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31};
+fes2_mapping_2 = {32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47};
+fes2_mapping_3 = {48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63};
+
+ideal_interconnect = 0;
+
+
+

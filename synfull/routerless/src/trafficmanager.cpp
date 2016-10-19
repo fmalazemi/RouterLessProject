@@ -36,7 +36,6 @@
 #include "booksim_config.hpp"
 #include "trafficmanager.hpp"
 #include "batchtrafficmanager.hpp"
-#include "fes2_trafficmanager.hpp"
 #include "random_utils.hpp"
 #include "vc.hpp"
 #include "packet_reply_info.hpp"
@@ -46,12 +45,10 @@ TrafficManager * TrafficManager::New(Configuration const & config,
 {
   TrafficManager * result = NULL;
   string sim_type = config.GetStr("sim_type");
-  if((sim_type == "latency") || (sim_type == "throughput")) {
+  if((sim_type == "fes2")) {
           result = new TrafficManager(config, net);
   } else if(sim_type == "batch") {
           result = new BatchTrafficManager(config, net);
-  } else if(sim_type == "fes2") {
-          result = new FeS2TrafficManager(config, net);
   } else {
           cerr << "Unknown simulation type: " << sim_type << endl;
   }
@@ -62,6 +59,28 @@ TrafficManager * TrafficManager::New(Configuration const & config,
 TrafficManager::TrafficManager( const Configuration &config, const vector<Network *> & net )
     : Module( 0, "traffic_manager" ), _net(net), _empty_network(false), _deadlock_timer(0), _reset_time(0), _drain_time(-1), _cur_id(0), _cur_pid(0), _time(0)
 {
+
+
+	_flit_width = config.GetInt( "flit_width" );
+        //If 1, packets are returned to FeS2 without being routed through booksim
+        _ideal_interconnect = config.GetInt( "ideal_interconnect" );
+
+        //Initialize the interface with FeS2
+        _fes2_interface = new FeS2Interface(config, net);
+        _fes2_interface->Init();
+
+        if(config.GetInt("trace_mode") == 1) {
+                _time_trace = new TraceGenerator();
+
+                string trace_file_name = config.GetStr("time_trace");
+                if (!_time_trace->openTraceFile( trace_file_name )) {
+                        cerr << "Trace file cannot be opened: " << trace_file_name << endl;
+                }
+        } else {
+                _time_trace = NULL;
+        }
+
+
 
 
     smallPacketSize = config.GetInt("small_buf_size");
@@ -665,6 +684,9 @@ TrafficManager::~TrafficManager( )
 
 void TrafficManager::_RetireFlit( Flit *f, int dest )
 {
+
+    FeS2ReplyPacket *p;
+
     _deadlock_timer = 0;
 
     assert(_total_in_flight_flits[f->cl].count(f->id) > 0);
@@ -709,6 +731,32 @@ void TrafficManager::_RetireFlit( Flit *f, int dest )
     }
 
     if ( f->tail ) {
+ 		p = new FeS2ReplyPacket;
+
+                p->dest = dest;
+                p->source = f->src;
+
+                //Extract the packet's ID and network based off of what was injected
+                //from FeS2
+                FeS2PayLoad* fes2_payload = (FeS2PayLoad*)(f->data);
+                p->id = fes2_payload->fes2_id;
+                p->network = fes2_payload->fes2_subnetwork;
+     // TODO Creation/Inject/Eject times
+                if(_time_trace != NULL) {
+                        stringstream str;
+
+                        str << p->id << "," << f->ctime << "," << f->itime
+                                        << "," << f->atime << ", " << f->hops;
+                        _time_trace->writeTrace(str.str());
+                }
+
+                //Queue the packet for extraction by the interface
+                _fes2_interface->EnqueueFeS2ReplyPacket(p);
+
+                delete fes2_payload;
+
+
+
         Flit * head;
         if(f->head) {
             head = f;
@@ -812,52 +860,25 @@ int TrafficManager::_IssuePacket( int source, int cl )
     return result;
 }
 
-void TrafficManager::_GeneratePacket( int source, int stype,
-                                      int cl, int time )
+
+void TrafficManager::_GeneratePacket( int source, int size, 
+                                      int cl, int time, int fes2_id = 0, int subnetwork=0, int destination=0 )
 {
-    assert(stype!=0);
+	assert(size != 0);
+
+        FeS2PayLoad* fes2_payload = new FeS2PayLoad;
+        fes2_payload->fes2_id = fes2_id;
+        fes2_payload->fes2_subnetwork = subnetwork;
 
     Flit::FlitType packet_type = Flit::ANY_TYPE;
-    int size = _GetNextPacketSize(cl); //input size
     int pid = _cur_pid++;
-
     assert(_cur_pid);
-    int packet_destination = _traffic_pattern[cl]->dest(source);
+    int packet_destination = destination;
     bool record = false;
     bool watch = gWatchOut && (_packets_to_watch.count(pid) > 0);
-    if(_use_read_write[cl]){
-        if(stype > 0) {
-            if (stype == 1) {
-                packet_type = Flit::READ_REQUEST;
-                size = _read_request_size[cl];
-            } else if (stype == 2) {
-                packet_type = Flit::WRITE_REQUEST;
-                size = _write_request_size[cl];
-            } else {
-                ostringstream err;
-                err << "Invalid packet type: " << packet_type;
-                Error( err.str( ) );
-            }
-        } else {
-            PacketReplyInfo* rinfo = _repliesPending[source].front();
-            if (rinfo->type == Flit::READ_REQUEST) {//read reply
-                size = _read_reply_size[cl];
-                packet_type = Flit::READ_REPLY;
-            } else if(rinfo->type == Flit::WRITE_REQUEST) {  //write reply
-                size = _write_reply_size[cl];
-                packet_type = Flit::WRITE_REPLY;
-            } else {
-                ostringstream err;
-                err << "Invalid packet type: " << rinfo->type;
-                Error( err.str( ) );
-            }
-            packet_destination = rinfo->source;
-            time = rinfo->time;
-            record = rinfo->record;
-            _repliesPending[source].pop_front();
-            rinfo->Free();
-        }
-    }
+
+
+
 
     if ((packet_destination <0) || (packet_destination >= _nodes)) {
         ostringstream err;
@@ -871,10 +892,6 @@ void TrafficManager::_GeneratePacket( int source, int stype,
         record = _measure_stats[cl];
     }
 
-    int subnetwork = ((packet_type == Flit::ANY_TYPE) ?
-                      RandomInt(_subnets-1) :
-                      _subnet[packet_type]);
-
     if ( watch ) {
         *gWatchOut << GetSimTime() << " | "
                    << "node" << source << " | "
@@ -882,6 +899,14 @@ void TrafficManager::_GeneratePacket( int source, int stype,
                    << " at time " << time
                    << "." << endl;
     }
+	  int extra_packet = 0;
+
+        //Determine number of flits for packet
+        if ((size % _flit_width) > 0) {
+                extra_packet = 1;
+        }
+        size = (size / _flit_width) + extra_packet;
+
 
     for ( int i = 0; i < size; ++i ) {
         Flit * f  = Flit::New();
@@ -946,38 +971,46 @@ void TrafficManager::_GeneratePacket( int source, int stype,
                        << ") at time " << time
                        << "." << endl;
         }
+  	f->data = (void*)fes2_payload;
+
         _partial_packets[source][cl].push_back( f );
     }
 }
 
 void TrafficManager::_Inject(){
-
+        FeS2RequestPacket *p;
+        FeS2ReplyPacket *rp;
     for ( int input = 0; input < _nodes; ++input ) {
         for ( int c = 0; c < _classes; ++c ) {
+        int     subnet = 0;
             // Potentially generate packets for any (input,class)
             // that is currently empty
-            if ( _partial_packets[input][c].empty() ) {
-                bool generated = false;
-                while( !generated && ( _qtime[input][c] <= _time ) ) {
-                    int stype = _IssuePacket( input, c );
+                        while((p = _fes2_interface->DequeueFeS2RequestPacket(input, subnet, c)) != NULL) {
+                                        if (p) { //generate a packet
+                                                if (_ideal_interconnect == 1) {
+                                                        //Don't send through booksim, immediately eject
+                                                        rp = new FeS2ReplyPacket;
 
-                    if ( stype != 0 ) { //generate a packet
-                        _GeneratePacket( input, stype, c,
-                                         _include_queuing==1 ?
-                                         _qtime[input][c] : _time );
-                        generated = true;
-                    }
-                    // only advance time if this is not a reply packet
-                    if(!_use_read_write[c] || (stype >= 0)){
-                        ++_qtime[input][c];
-                    }
-                }
+                                                        rp->dest = p->dest;
+                                                        rp->id = p->id;
+                                                        rp->source = p->source;
+                                                        rp->network = p->network;
+                                                        rp->cl = p->cl;
+                                                        rp->miss_pred = p->miss_pred;
 
-                if ( ( _sim_state == draining ) &&
-                     ( _qtime[input][c] > _drain_time ) ) {
-                    _qdrained[input][c] = true;
-                }
-            }
+                                                        _fes2_interface->EnqueueFeS2ReplyPacket(rp);
+                                                } else {
+                                                        //Divide packet into flits and send into booksim
+                                                        _GeneratePacket(input, p->size, c, _time, p->id,
+                                                                        p->network, p->dest);
+                                                }
+                                        }
+
+                                        if (p) {
+                                                free(p);
+                                                p = NULL;
+                                        }
+                                }
         }
     }
 }
@@ -1028,6 +1061,11 @@ void TrafficManager::_Step( )
         }
         _net[subnet]->ReadInputs( );
     }
+        //FeS2's interface will return 1 on a quit request
+        if (_sim_state != done && _fes2_interface->Step() != 0) {
+                _sim_state = done;
+        }
+
     if ( !_empty_network ) {
         _Inject();
     }
@@ -1459,20 +1497,25 @@ bool TrafficManager::_SingleSim( )
     vector<double> prev_accepted(_classes, 0.0);
     bool clear_last = false;
     int total_phases = 0;
-    while( ( total_phases < _max_samples ) &&
+/*    while( ( total_phases < _max_samples ) &&
            ( ( _sim_state != running ) ||
              ( converged < 3 ) ) ) {
 
         if ( clear_last || (( ( _sim_state == warming_up ) && ( ( total_phases % 2 ) == 0 ) )) ) {
             clear_last = false;
             _ClearStats( );
-        }
+        }*/
+     _sim_state = running;
+ 
+    while (_sim_state != done) {
+
 
 
         for ( int iter = 0; iter < _sample_period; ++iter )
             _Step( );
 
-        //cout << _sim_state << endl;
+	cout << _sim_state << endl;
+        cout << "Sample period: " << total_phases << endl;
 
         UpdateStats();
         DisplayStats();
@@ -1544,7 +1587,7 @@ bool TrafficManager::_SingleSim( )
             }
 
         }
-
+	/*
         // Fail safe for latency mode, throughput will ust continue
         if ( _measure_latency && ( lat_exc_class >= 0 ) ) {
 
@@ -1642,6 +1685,33 @@ bool TrafficManager::_SingleSim( )
     }
 
     return ( converged > 0 );
+	*/
+                if ( _measure_latency && ( lat_exc_class >= 0 ) ) {
+                        cout << "Average latency for class " << lat_exc_class <<
+                                        " exceeded " << _latency_thres[lat_exc_class] <<
+                                        " cycles. Aborting simulation." << endl;
+                        converged = 0;
+                        _sim_state = draining;
+                        _drain_time = _time;
+                        break;
+
+                }
+
+                if(_sim_state == running) {
+                        if ( ( !_measure_latency || ( lat_chg_exc_class < 0 ) ) &&
+                                        ( acc_chg_exc_class < 0 ) ) {
+                                ++converged;
+                        } else {
+                                converged = 0;
+                        }
+                }
+                ++total_phases;
+        }
+
+        _drain_time = _time;
+
+        return ( true );
+
 }
 
 bool TrafficManager::Run( )

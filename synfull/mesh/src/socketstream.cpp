@@ -1,4 +1,4 @@
-/*
+	/*
  * socketstream.cpp
  *
  *  Created on: Dec 16, 2009
@@ -12,10 +12,12 @@
 
 #include <cstdio>
 #include <cerrno>
-
-int SocketStream::listen(const char *host, int port)
-{
-	char *socket_path = "./socket";
+int SocketStream::listen(const char *host, int port, int sid)
+{	
+	char socketID = '0'+sid; 
+	string socketName =  "./socket";
+	socketName += socketID ; 
+	const char *socket_path = socketName.c_str();
     // Create a socket
 	if ( (so = socket(AF_UNIX, SOCK_STREAM, 0)) < 0) {
 		cout << "Error creating socket." << endl;
@@ -40,7 +42,7 @@ int SocketStream::listen(const char *host, int port)
 	bIsAlive = true;
 
 #ifdef NS_DEBUG
-	cout << "Listening on socket" << endl;
+        cout<<"Listening on "<<socketName<<endl;
 #endif
 
 	return 0;
@@ -63,9 +65,12 @@ SocketStream* SocketStream::accept()
 	return new SocketStream(clientsock, (struct sockaddr*)&clientaddr, clientaddrlen);
 }
 
-int SocketStream::connect(const char *host, int port)
+int SocketStream::connect(const char *host, int port, int sid)
 {
-	char *socket_path = "./socket";
+	char socketID = '0'+sid; 
+        string socketName = "./socket";
+	socketName += socketID; 
+	const char *socket_path = socketName.c_str();
 	// Create a socket.
 	if ( (so = socket(AF_UNIX, SOCK_STREAM, 0)) < 0 ){
 		cout << "Error creating socket." << endl;

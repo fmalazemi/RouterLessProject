@@ -44,10 +44,13 @@ struct FeS2ReplyPacket {
 class FeS2Interface {
 
 private:
-	queue<FeS2RequestPacket *> **_request_buffer;
-	queue<FeS2ReplyPacket *> _reply_buffer;
 
-	map<int, int> _original_destinations;
+	int numOfSyn;
+
+	vector<queue<FeS2RequestPacket *> **> _request_buffer;
+	vector<queue<FeS2ReplyPacket *> > _reply_buffer;
+
+	vector<map<int, int> > _original_destinations;
 
 	TraceGenerator *_trace;
 
@@ -56,30 +59,38 @@ private:
 	int _sources;
 	int _dests;
 
-	int _duplicate_networks;
+	vector<int> _duplicate_networks;
 
-	bool _concentrate;
+	vector<bool> _concentrate;
 
-	SocketStream _listenSocket;
-	SocketStream *_channel;
+	vector<SocketStream> _listenSocket;
+	vector<SocketStream *>_channel;
 	string _host;
 	int _port;
 
-	map<int, int> _node_map;
+	vector<map<int, int> > _node_map;
+	map<int, int> _synfull_map;
+	map<int, bool> synfullDone; 
+
+	FeS2RequestPacket *DequeueFeS2RequestPacket(int source, int network, int cl, int sid);
+        int EnqueueFeS2ReplyPacket(FeS2ReplyPacket *packet, int sid);
+	int GetSynfullID(int s); //send source or dest and get Synfull ID ;
 
 public:
 	FeS2Interface( const Configuration &config, const vector<Network *> & net );
 	~FeS2Interface();
 
 	int Init();
+	int Init(int);
 	int Step();
+	int Step(int); 
 
-	int EnqueueFeS2RequestPacket(FeS2RequestPacket *packet);
+	int EnqueueFeS2RequestPacket(FeS2RequestPacket *packet, int sid);
 	FeS2RequestPacket *DequeueFeS2RequestPacket(int source, int network, int cl);
 
-	int getFeS2ReplyQueueSize() { return _reply_buffer.size(); }
+	int getFeS2ReplyQueueSize(int sid) { return _reply_buffer[sid].size(); }
 	int EnqueueFeS2ReplyPacket(FeS2ReplyPacket *packet);
-	FeS2ReplyPacket *DequeueFeS2ReplyPacket();
+	FeS2ReplyPacket *DequeueFeS2ReplyPacket(int sid);
 
 	int GenerateTestPackets();
 

@@ -937,7 +937,7 @@ void TrafficManager::_GeneratePacket( int source, int size,
                        << ") at time " << time
                        << "." << endl;
         }
-        		f->data = (void*)fes2_payload;
+        f->data = (void*)fes2_payload;
 
 
         _partial_packets[source][cl].push_back( f );
