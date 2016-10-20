@@ -26,6 +26,7 @@ FeS2Interface::FeS2Interface( const Configuration &config,
 	}
 	numOfSyn = config.GetInt("synfull_instances");
 	_original_destinations.resize(numOfSyn);
+	_original_source.resize(numOfSyn);
 	_listenSocket.resize(numOfSyn);	
 	_channel.resize(numOfSyn); 
 	for(int i = 0; i < numOfSyn; i++){
@@ -261,9 +262,10 @@ int FeS2Interface::EnqueueFeS2RequestPacket(FeS2RequestPacket *packet, int sid) 
 	//The mapping of FeS2 devices to BookSim nodes is done here
 
 	// We always need to store the original destination send it to the correct
+
 	// FeS2 queue
 	_original_destinations[sid][packet->id] = packet->dest;
-
+	_original_source[sid][packet->id] = packet->source;
 	//_node_map is based off of the configuration file. See "fes2_mapping"
 	packet->source 	= _node_map[sid][packet->source];
 	packet->dest 	= _node_map[sid][packet->dest];
@@ -306,16 +308,21 @@ int FeS2Interface::EnqueueFeS2ReplyPacket(FeS2ReplyPacket *packet) {
 int FeS2Interface::EnqueueFeS2ReplyPacket(FeS2ReplyPacket *packet, int sid) {
 	assert(_original_destinations[sid].find(packet->id) !=
 			_original_destinations[sid].end());
-
+        assert(_original_source[sid].find(packet->id) !=
+                        _original_source[sid].end());
 	if (_concentrate[sid]) {
 		assert(_original_destinations[sid].find(packet->id) !=
 				_original_destinations[sid].end());
-		assert(_original_destinations[sid][packet->id]/2 == packet->dest);
-		packet->source *= 2;
+		//cout<<_original_destinations[sid][packet->id]/2<<", "<<_original_destinations[sid][packet->id]<<", "<<packet->dest<<endl;
+		//assert(_original_destinations[sid][packet->id]/2 == packet->dest);
+		//packet->source *= 2;
 	}
 
 	packet->dest = _original_destinations[sid][packet->id];
+        packet->source = _original_source[sid][packet->id] ; 
 	_original_destinations[sid].erase(packet->id);
+        _original_source[sid].erase(packet->id);
+
 
 	_reply_buffer[sid].push(packet);
 
