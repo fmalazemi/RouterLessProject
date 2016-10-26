@@ -66,9 +66,6 @@ CPP_SRCS = main.cpp \
    power_module.cpp \
    switch_monitor.cpp \
    buffer_monitor.cpp \
-   fes2_interface.cpp \
-   fes2_trafficmanager.cpp \
-   trace_generator.cpp
 
 ifeq ($(DEFINE) , $(DEFINE_TEST))
 	CPP_SRCS += \
@@ -88,7 +85,6 @@ ALLOCATORS:= $(wildcard allocators/*.cpp)
 ARBITERS:= $(wildcard arbiters/*.cpp)
 ROUTERS:= $(wildcard routers/*.cpp)
 POWER:= $(wildcard power/*.cpp)
-NETSTREAM:= $(wildcard netstream/*.cpp) 
 
 #--- Make rules ---
 OBJS :=  $(LEX_OBJS) $(YACC_OBJS)\

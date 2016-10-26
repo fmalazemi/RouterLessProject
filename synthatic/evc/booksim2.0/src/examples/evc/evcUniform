@@ -37,11 +37,11 @@ n = 2;
 routing_function = dor;
 router = iqevc;
 // Flow control
-num_vcs     = 2;
+num_vcs     = 3;
 vc_buf_size = 3;
 wait_for_tail_credit = 0;
 speculative = 1; 
-injection_rate = 0.555; 
+injection_rate = 0.005; 
 // Router architecture
 vc_allocator = islip;
 sw_allocator = islip;
@@ -73,9 +73,9 @@ sample_period = 100000;
 //
 
 evc = 1;
-num_evcs = 1;
+num_evcs = 2;
 //evc_prioritized_class = 1;
 selective_vc_request = 1;
 hold_switch_for_evc_packet = 1;
-evc_next_route = 0;
+evc_next_route = 1;
 output_file_name = runs/evcUniformOutput;

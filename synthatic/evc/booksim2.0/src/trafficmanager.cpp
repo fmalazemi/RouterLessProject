@@ -38,7 +38,6 @@
 #include "random_utils.hpp" 
 #include "vc.hpp"
 #include "packet_reply_info.hpp"
-#include "fes2_trafficmanager.hpp"
 
 TrafficManager * TrafficManager::New(Configuration const & config,
 				     vector<Network *> const & net)
@@ -49,8 +48,6 @@ TrafficManager * TrafficManager::New(Configuration const & config,
     result = new TrafficManager(config, net);
   } else if(sim_type == "batch") {
     result = new BatchTrafficManager(config, net);
-  } else if(sim_type == "fes2"){
-	result = new FeS2TrafficManager(config, net);
   } else {
     cerr << "Unknown simulation type: " << sim_type << endl;
   } 
@@ -775,7 +772,7 @@ void TrafficManager::_GeneratePacket( int source, int stype,
   int size = _GetNextPacketSize(cl); //input size 
   int pid = _cur_pid++;
   assert(_cur_pid);
-  int packet_destination = _traffic_pattern[cl]->dest(source);
+  int packet_destination = 63;//_traffic_pattern[cl]->dest(source);
   bool record = false;
   bool watch = gWatchOut && (_packets_to_watch.count(pid) > 0);
   if(_use_read_write[cl]){
@@ -835,7 +832,7 @@ void TrafficManager::_GeneratePacket( int source, int stype,
 		<< " at time " << time
 		<< "." << endl;
   }
-  
+  cout<<_cur_id<<", src = "<<source<<", dest = "<<destination<<endl;  
   for ( int i = 0; i < size; ++i ) {
     Flit * f  = Flit::New();
     f->id     = _cur_id++;
@@ -905,7 +902,7 @@ void TrafficManager::_GeneratePacket( int source, int stype,
 
 void TrafficManager::_Inject(){
 
-  for ( int input = 0; input < _nodes; ++input ) {
+  for ( int input = 0; input < 1; ++input ) {
     for ( int c = 0; c < _classes; ++c ) {
       // Potentially generate packets for any (input,class)
       // that is currently empty
