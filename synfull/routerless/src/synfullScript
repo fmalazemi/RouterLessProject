@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# configfile $1 
+#model file $2
+# number of cycles $3
+# steady state $4
+
+
+
+	./booksim $1 & 
+	sleep 2
+	./tgen $2 $3 $4 0 &
+	sleep 1
+	./tgen $2 $3 $4 1 &
+	sleep 1
+	./tgen $2 $3 $4 2 &
+	sleep 1
+	./tgen $2 $3 $4 3 &
+
