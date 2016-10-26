@@ -135,8 +135,8 @@ void RouterLess::readShortestRingsRL(ifstream & in /*input file*/){
 
 		getline(in,line);
 		int src = atoi(line.c_str());
-		bool x[100];
-		for(int i = 0; i < 100; i++){
+		bool x[ring.size()];
+		for(int i = 0; i < ring.size(); i++){
 			x[i] = false;
 		}
 
@@ -161,7 +161,7 @@ void RouterLess::readShortestRingsRL(ifstream & in /*input file*/){
 			//random_shuffle(shortestRing[src][dest].begin(), shortestRing[src][dest].end());
 
 		}
-		for(int i = 0; i < 100; i ++){
+		for(int i = 0; i < ring.size(); i ++){
 			if(x[i] == false){
 				continue;
 			}

@@ -51,6 +51,7 @@ private:
 	vector<queue<FeS2ReplyPacket *> > _reply_buffer;
 
 	vector<map<int, int> > _original_destinations;
+        vector<map<int, int> > _original_source;
 
 	TraceGenerator *_trace;
 
