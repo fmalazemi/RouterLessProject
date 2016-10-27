@@ -14,9 +14,18 @@
 #include <cerrno>
 int SocketStream::listen(const char *host, int port, int sid)
 {	
-	char socketID = '0'+sid; 
 	string socketName =  "./socket";
-	socketName += socketID ; 
+	if(sid >= 10){
+		int j = sid/10; 
+		char socketID = '0'+j;
+		socketName += socketID ;
+		j = sid%10;  
+ 		socketID = '0'+j;
+		socketName += socketID ; 
+	}else {
+		char socketID = '0'+sid; 
+		socketName += socketID ; 
+	}
 	const char *socket_path = socketName.c_str();
     // Create a socket
 	if ( (so = socket(AF_UNIX, SOCK_STREAM, 0)) < 0) {
@@ -67,9 +76,18 @@ SocketStream* SocketStream::accept()
 
 int SocketStream::connect(const char *host, int port, int sid)
 {
-	char socketID = '0'+sid; 
-        string socketName = "./socket";
-	socketName += socketID; 
+        string socketName =  "./socket";
+        if(sid >= 10){
+                int j = sid/10; 
+                char socketID = '0'+j;
+                socketName += socketID ;
+                j = sid%10;  
+                socketID = '0'+j;
+                socketName += socketID ; 
+        }else {
+                char socketID = '0'+sid; 
+                socketName += socketID ; 
+        }
 	const char *socket_path = socketName.c_str();
 	// Create a socket.
 	if ( (so = socket(AF_UNIX, SOCK_STREAM, 0)) < 0 ){

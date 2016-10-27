@@ -74,26 +74,27 @@ _int_map["fes2_mapping_8"] = 0;
   AddStrField("fes2_mapping_8", ""); // workaraound to allow for vector specification
 _int_map["fes2_mapping_9"] = 0;
   AddStrField("fes2_mapping_9", ""); // workaraound to allow for vector specification
+
   _int_map["fes2_mapping_10"] = 0;
+  AddStrField("fes2_mapping_10", ""); // workaraound to allow for vector specification
+_int_map["fes2_mapping_11"] = 0;
   AddStrField("fes2_mapping_11", ""); // workaraound to allow for vector specification
-_int_map["fes2_mapping_1"] = 0;
+_int_map["fes2_mapping_12"] = 0;
   AddStrField("fes2_mapping_12", ""); // workaraound to allow for vector specification
-_int_map["fes2_mapping_2"] = 0;
+_int_map["fes2_mapping_13"] = 0;
   AddStrField("fes2_mapping_13", ""); // workaraound to allow for vector specification
-_int_map["fes2_mapping_3"] = 0;
+_int_map["fes2_mapping_14"] = 0;
   AddStrField("fes2_mapping_14", ""); // workaraound to allow for vector specification
-_int_map["fes2_mapping_4"] = 0;
+_int_map["fes2_mapping_15"] = 0;
   AddStrField("fes2_mapping_15", ""); // workaraound to allow for vector specification
-_int_map["fes2_mapping_5"] = 0;
+_int_map["fes2_mapping_16"] = 0;
   AddStrField("fes2_mapping_16", ""); // workaraound to allow for vector specification
-_int_map["fes2_mapping_6"] = 0;
+_int_map["fes2_mapping_17"] = 0;
   AddStrField("fes2_mapping_17", ""); // workaraound to allow for vector specification
-_int_map["fes2_mapping_7"] = 0;
+_int_map["fes2_mapping_18"] = 0;
   AddStrField("fes2_mapping_18", ""); // workaraound to allow for vector specification
-_int_map["fes2_mapping_8"] = 0;
+_int_map["fes2_mapping_19"] = 0;
   AddStrField("fes2_mapping_19", ""); // workaraound to allow for vector specification
-_int_map["fes2_mapping_9"] = 0;
-  AddStrField("fes2_mapping_20", ""); // workaraound to allow for vector specification
 
 
 

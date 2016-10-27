@@ -25,6 +25,7 @@ FeS2Interface::FeS2Interface( const Configuration &config,
 		}
 	}
 	numOfSyn = config.GetInt("synfull_instances");
+	assert(numOfSyn <= 20); 
 	_original_destinations.resize(numOfSyn);
 	_original_source.resize(numOfSyn);
 	_listenSocket.resize(numOfSyn);	
@@ -58,6 +59,8 @@ FeS2Interface::FeS2Interface( const Configuration &config,
 			int k = i%10; 
 			s += (char)('0'+j);
 			s += (char)('0'+k);
+		}else {
+			s += (char)('0'+i);
 		}
 		vector<int> mapping = config.GetIntArray(s);
 		for(int j = 0; j < mapping.size(); j++) {
