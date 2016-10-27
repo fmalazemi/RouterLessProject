@@ -37,7 +37,7 @@ router = rlAlpha;
 //extension_buffers = 1;
 
 routing_function = min;
-network_file = imrConfig8.txt;
+network_file = rlConfig4.txt;
 traffic = uniform;
 
 sample_period = 100000;

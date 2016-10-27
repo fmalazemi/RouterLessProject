@@ -59,7 +59,7 @@ output_file_name = runs/rlAlphaUniformOutput;
 
 sim_type = fes2; 
 flit_width = 16;
-synfull_instances = 4;
+synfull_instances = 30;
 
 
 fes2_mapping_0 = {4,4,6,6,11,11,13,13,20,20,22,22,25,25,30,30,38,38,39,39,42,42,43,43,53,53,55,55,58,58,59,59,};

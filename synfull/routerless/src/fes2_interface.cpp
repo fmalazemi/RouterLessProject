@@ -53,7 +53,12 @@ FeS2Interface::FeS2Interface( const Configuration &config,
 	_node_map.resize(numOfSyn); 
 	for(int i = 0; i < numOfSyn; i++){
 		string s = "fes2_mapping_"; 
-		s += (char)('0'+i);
+		if(i >= 10){
+			int j = i/10; 
+			int k = i%10; 
+			s += (char)('0'+j);
+			s += (char)('0'+k);
+		}
 		vector<int> mapping = config.GetIntArray(s);
 		for(int j = 0; j < mapping.size(); j++) {
 			int m = mapping[j]; 
