@@ -15,7 +15,7 @@ source files from synfull. By default connection is off and must be set to 1 in 
 ## booksim-synfull-2_fromAuthor.zip
 This version is a working version with booksim from synfull author. 
 
-##StoredRuns
+##Results
 Results stored here. 
 
 #Notice
