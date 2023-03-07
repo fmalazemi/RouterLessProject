@@ -37,7 +37,7 @@ router = rlBeta;
 extension_buffers = 2;
 
 routing_function = min;
-network_file = imrConfig8.txt;
+network_file = rl4n.txt;
 traffic = uniform;
 
 sample_period = 100000;

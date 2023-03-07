@@ -65,6 +65,7 @@ void Flit::Reset()
   cl        = -1 ;
   head      = false ;
   tail      = false ;
+  switchRing = false;
   ctime     = -1 ;
   itime     = -1 ;
   atime     = -1 ;

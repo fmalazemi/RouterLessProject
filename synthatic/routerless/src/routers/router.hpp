@@ -69,8 +69,11 @@ protected:
 
   //RouterLess Shortest Path table
   vector<vector<int> > _RL;
-
-
+  vector<int> _allVRing; 
+  vector<int> _allHRing;
+  vector<int> _hRing;  
+  vector<int> _vRing;  
+  vector< vector<int> > _allRings ; 
 
   vector<FlitChannel *>   _input_channels;
   vector<CreditChannel *> _input_credits;
@@ -133,6 +136,38 @@ public:
   void setRL(vector<vector<int > >& _rl){
       _RL = _rl;
   };
+  void setAllRings(vector<int> & vRing, vector<int> & hRing, vector< vector<int> > & allRings){ 
+      _allVRing = vRing; 
+      _allHRing = hRing;  
+      _allRings = allRings ; 
+      printf("H Rings on %d are [ ", GetID()); 
+      for(int r = 0; r < _allHRing.size(); r++){
+	int rID = _allHRing[r]; 
+        int id = GetID(); 
+        for(int i = 0; i < _allRings[rID].size(); i++){
+		if(_allRings[rID][i] == GetID()){
+			printf("%d, ", rID);
+                        _hRing.push_back(rID); 
+			break;  
+		}
+	}
+      }
+      printf("]\n");
+      printf("V Rings on %d are [ ", GetID()); 
+            for(int r = 0; r < _allVRing.size(); r++){
+        int rID = _allVRing[r];
+        int id = GetID();  
+        for(int i = 0; i < _allRings[rID].size(); i++){
+                if(_allRings[rID][i] == GetID()){
+                        printf("%d, ", rID);
+                        _vRing.push_back(rID);
+                        break;
+                }
+        }
+      }
+      printf("]\n"); 
+      printf("]\n"); 
+  } 
   void printIMR(){
     //prints shortest path table for RouterLess configuration.
     cout<<"Router ID = "<<GetID()<<endl;

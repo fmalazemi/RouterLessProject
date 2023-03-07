@@ -115,6 +115,7 @@ class RLBETARouter : public Router {
         bool resetForward;
         bool bufferExtended;
         bool extensionDone;
+	bool isSwitching; 
   };
   int _extendedBuffers;
   int _MAXextendedBuffers;
@@ -151,7 +152,7 @@ class RLBETARouter : public Router {
 
   map<int, Flit *> _in_queue_flits;
 
-
+  
 
 
   deque<pair<int, pair<Credit *, int> > > _proc_credits;
@@ -182,7 +183,7 @@ class RLBETARouter : public Router {
 
   void _ClearFlags();
   void _InjectionModule();
-
+  void _SwitchModule();
   void _InputModule();
   void _EjectionModule() ;
   void _RouteTraffic();
@@ -191,10 +192,13 @@ class RLBETARouter : public Router {
   int _getEjectorID(int );
   void _resetStatus();
   void _initialReset();
-
-
-
-
+  
+  bool isRingInUse(int i/* i = inputID*/){ 
+	return !(ringState[i].isForward || ringState[i].isSwitching || ringState[i].isInjecting || ringState[i].isEjecting); 
+  } 
+  int _getOneVRings(int);  
+  int _oldestPacketToSwitch();
+  bool _isVRing(int); 
 
   void _OutputQueuing( );
 

@@ -53,6 +53,8 @@ public:
   bool head;
   bool tail;
 
+  bool switchRing;
+
   int ringID;
 
   int  ctime;

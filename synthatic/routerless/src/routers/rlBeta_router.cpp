@@ -121,6 +121,7 @@ RLBETARouter::RLBETARouter( Configuration const & config, Module *parent,
 
   // Alloc VC's
   _buf.resize(_inputs);
+  cout<<"Inputs ---------------------> "<<_inputs<<endl<<endl;
 	small_buf_size = config.GetInt("small_buf_size");
 	big_buf_size = config.GetInt("big_buf_size");
   for ( int i = 0; i < _inputs; ++i ) {
@@ -237,7 +238,9 @@ void RLBETARouter::_InternalStep()
 
 	_EjectionModule() ;
 
+        _SwitchModule();
  	_InputModule() ;
+
 
  	_InjectionModule() ;
 
@@ -274,7 +277,8 @@ bool RLBETARouter::_ReceiveFlits( )
     if(f) {
 
       _in_queue_flits.insert(make_pair(input, f));
-
+//      if(f->pid == 14){ printf("Packet 14 at Router %d input %d\n", GetID(), input);}; 
+//     if(f->hops > 20) exit(0); 
       activity = true;
     }
   }
@@ -357,6 +361,57 @@ void RLBETARouter::_InputQueuing( )
 }
 
 
+int RLBETARouter::_getOneVRings(int dest){
+	
+	for(int r = 0; r < _RL[dest].size(); r++){
+		int rID = _RL[dest][r] ; 
+		for(int i = 0; i < _vRing.size(); i++){
+			int vR = _vRing[i]; 
+			int input = _ringInput[vR]; 
+			if(rID == vR && ! ringState[input].isSwitching){
+				return vR; 
+			}
+		}
+	}
+	return -1; 
+
+}
+
+bool RLBETARouter::_isVRing(int rID){
+	for(int i = 0; i < _vRing.size(); i++){
+		if(_vRing[i] == rID) return true; 
+
+	}
+	return false ; 
+}
+
+
+
+int RLBETARouter::_oldestPacketToSwitch(){
+	int maxAge = -1; 
+	int curTime = GetSimTime(); 
+	int maxInput = -1; 
+	int id = GetID() ; 
+
+	for(int r = 0; r < _hRing.size(); r++){
+		int rID = _hRing[r]; 
+		int input = _ringInput[rID] ; 
+		if(_buf[input]->Empty(0)) continue; 
+		Flit * const f = _buf[input]->FrontFlit(0);
+                assert(f);
+		if( ! f->switchRing) continue ; 
+		if(  false /*dest is in vRings */  && f->head && !ringState[input].isSwitching){
+			int age = curTime - f->creationTime;
+			if(age > maxAge){
+				maxAge = age; 
+				maxInput = input; 
+			} 
+		}		
+	}
+	return maxInput ;
+
+
+}
 
 
 int RLBETARouter::_oldestPacket(){
@@ -530,6 +585,10 @@ void RLBETARouter::_InputModule(){
       int output = _ringOutput[rID] ;
       assert( input == output) ;
       assert( !ringState[input].resetForward );
+      
+//      if(f->switchRing && _RL[f->dest])
+//           {_switchModule();}
+      
       if( (f->dest == id && cur_buf->Full() )  || f->dest != id){
         ringState[input].isForward = true;
         input_to_output.push_back(make_pair(input, output));
@@ -569,6 +628,34 @@ bool RLBETARouter::_canInjection(int input, int pSize){
 
 }
 
+void RLBETARouter::_SwitchModule(){
+
+	int id = GetID() ;
+ 	for(int r = 0; r < _hRing.size(); r++){
+ 		int rID = _hRing[r]; 
+    		int sourceInput = _ringInput[rID];
+    		Buffer * const cur_buf = _buf[sourceInput];
+		if(cur_buf->Empty(0)) continue ; 
+		
+      		Flit * const f = cur_buf->FrontFlit(0);
+      		assert(f);
+		if( ! f->switchRing) continue; 
+      		int fRID = f->ringID;
+			cout<<"RID = "<<id<<": "<<f->pid<<", "<<" ---> src = "<<f->src<<", dest = "<<f->dest<<" ---> need switch"<<f->switchRing<<", FlitRing"<<f->ringID<<", curRing"<<rID<<endl;
+		assert(fRID == rID);
+		cout<<"Available Rings at Router "<<id<<", ";
+		for(int x = 0; x < _RL[f->dest].size(); x++){
+			if(_isVRing(_RL[f->dest][x])) // we can pre calc this during network build
+				cout<<"r = "<<_RL[f->dest][x]<<", "; 
+				//can Switch to this ring 
+		} 
+		cout<<endl;
+  	}
+}
+
+
+
+
 
 void RLBETARouter::_InjectionModule(){
 	Buffer * const cur_buf = _buf[0]; // input from node
@@ -580,7 +667,7 @@ void RLBETARouter::_InjectionModule(){
 	assert(f);
 	assert(f->src == GetID());
 	if( ! f->head ){
-
+                assert(false); 
 		assert(injector.inUse);
 		assert(ringState[injector.output].isInjecting);
 		assert(injector.pid == f->pid) ;
@@ -597,9 +684,43 @@ void RLBETARouter::_InjectionModule(){
 		}
 
 	}else{
+		assert( ! injector.inUse );	
+		if(_RL[f->dest].size() == 0){
+			if(f->pid == 182154){
+				cout<<"HERE WE ARE \n"; 
+				exit(0);
 
-		assert( ! injector.inUse );
 
+			}
+			assert( ! f->switchRing);
+   			for(int r = 0; r < _hRing.size(); r++){
+                        	int rID = _hRing[r];
+                       		int input = _ringInput[rID];
+				if( _canInjection(input, f->pSize) ){				
+					injector.inUse    = true ;
+                                	injector.pid      = f->pid;
+                               		injector.ringID   = rID;
+                                	injector.output = _ringOutput[rID];
+                                	assert(injector.output == input);
+				
+					f->switchRing = true; 
+                              	  	f->ringID = rID ;
+                               		f->injectionTime = GetSimTime();
+
+                                	ringState[input].isInjecting = true;
+
+                                	input_to_output.push_back(make_pair(0, injector.output) );
+                                	if(f->tail){
+                                       		injector.reset = true  ;
+                                        	ringState[input].resetForward = true ;
+                                        	if(ringState[input].bufferExtended){
+                                               		ringState[input].extensionDone = true;
+                                       	 	}
+					}
+					return ; 
+				}
+			}  
+		}else{
 		for(int r = 0; r < _RL[f->dest].size(); r++){
 			int rID = _RL[f->dest][r];
 			int input = _ringInput[rID];
@@ -641,6 +762,7 @@ void RLBETARouter::_InjectionModule(){
 			}
 
 		}
+	}
 	}
 	//All rings that reach f->dest are busy.
 

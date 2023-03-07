@@ -116,12 +116,25 @@ void RouterLess::readRingsRL(ifstream & in /*input file*/){
     stringstream str;
     str<<line;
 
+
     int id, node_id;
+    char ringType; 
+    str>>ringType; 
+
     str>>id ; //ring id
+    if(ringType == 'v') {  
+     vRing.push_back(id);
+     cout<<"v --> "<<id<<endl;} 
+    else if(ringType == 'h') {  
+        hRing.push_back(id);
+        cout<<"h---> "<<id<<endl;}
+
+
 
     while(str>>node_id){
       ring[id].push_back(node_id);
     }
+    
   }
 }
 
@@ -241,10 +254,9 @@ void RouterLess::_BuildNetRL(const Configuration &config){
 
 
     _routers[node] = Router::NewRouter( config, this, router_name.str(), node, radix, radix);
-
-
+    _routers[node]->setAllRings(vRing, hRing, ring); 
     _routers[node]->setRL(shortestRing[node]);
-
+    
     _timed_modules.push_back(_routers[node]);
 
 
@@ -274,7 +286,7 @@ void RouterLess::_BuildNetRL(const Configuration &config){
   cout<<"\n\n------------------- [ Rings List ] --------------------\n\n"<<endl;
 
   for(int rID = 1; rID < ring.size(); rID++){//ring zero is empty. Ignore.
-
+      cout<<"Ring iD = "<<rID<<endl;
       assert(ring[rID].size() > 1);
       cout<<"Ring ID = "<<rID <<endl;
       cout<<"Ring List = [";
@@ -290,7 +302,6 @@ void RouterLess::_BuildNetRL(const Configuration &config){
 
         _chan[curChannel]->SetRingID(rID);
         _chan_cred[curChannel]->SetRingID(rID);
-
         _routers[node]->AddOutputChannel( _chan[curChannel], _chan_cred[curChannel] );
         _routers[nextNode]->AddInputChannel( _chan[curChannel], _chan_cred[curChannel]);
 
@@ -298,6 +309,7 @@ void RouterLess::_BuildNetRL(const Configuration &config){
         cout<<_routers[node]->GetID()<<", ";
 
       }
+
 
       int node = ring[rID][ring[rID].size()-1];
       cout<<_routers[node]->GetID()<<" ]"<<endl;
@@ -331,7 +343,6 @@ void RouterLess::_BuildNetRL(const Configuration &config){
 
     }
   }
-
 
 
 

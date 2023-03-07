@@ -2363,7 +2363,7 @@ int TrafficManager::_GetNextPacketSize(int cl) const
     assert(cl >= 0 && cl < _classes);
    if(multiSizePackets){
       int x = rand()%100;
-      if( x >= 20){
+      if( x >= 0){
         return smallPacketSize;
       }else {
         return bigPacketSize;

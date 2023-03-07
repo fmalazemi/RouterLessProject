@@ -41,6 +41,8 @@ class RouterLess : public Network {
   //associtation between  nodes and routers
 
   vector<vector<int> > ring; //vector of rings
+  vector<int> vRing; //contains all vertical rings ids only (no node ids) 
+  vector<int> hRing; //same as above except for horizantal rings
   vector<vector<vector<int> > > shortestRing;
   //[router][dest_node]= vector of rings sorted in order from shortest.
 
